@@ -17,20 +17,7 @@
 # In the types.graphql you define your data schema
 types: ./types.graphql
 
-
 functions:
-
-# added by auth0 template: (please uncomment)
-
-  authenticate:
-    handler:
-      code:
-        src: ./src/auth0/auth0Authentication.js
-        environment:
-          AUTH0_DOMAIN: ${env:AUTH0_DOMAIN}
-          AUTH0_API_IDENTIFIER: ${env:AUTH0_API_IDENTIFIER}
-    type: resolver
-    schema: ./src/auth0/auth0Authentication.graphql
 
   hello:
     handler:
@@ -51,6 +38,6 @@ permissions:
 # Your root tokens used for functions to get full access to the API
 # Read more here:
 # https://www.graph.cool/docs/reference/auth/authentication/authentication-tokens-eip7ahqu5o
-# rootTokens:
-#   - mytoken
+rootTokens:
+  - auth0
 

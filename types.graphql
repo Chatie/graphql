@@ -1,28 +1,66 @@
-# The following types define the data model of the example service
-# based on which the GraphQL API is generated
-
-type Post @model {
-  id: ID! @isUnique
-  title: String!
-
-  # Every relation also required a back-relation (to determine 1:1, 1:n or n:m)
-  # author: User! @relation(name: "UserPosts")
-}
-
-# added by auth0 template: (please uncomment)
 type User @model {
   # Required system field:
   id: ID! @isUnique # read-only (managed by Graphcool)
-
   # Optional system fields (remove if not needed):
   createdAt: DateTime! # read-only (managed by Graphcool)
   updatedAt: DateTime! # read-only (managed by Graphcool)
 
-  email: String
-  auth0UserId: String @isUnique
+  email:    String! @isUnique
+  nickname: String! @isUnique @migrationValue(value: "42")
 
   name: String
-  # posts: [Post!]! @relation(name: "UserPosts")
+  intro: String
+
+  hostieList: [Hostie!]! @relation(name: "UserHosties")
+  botieList: [Botie!]! @relation(name: "UserBoties")
+  giftieList: [Giftie!]! @relation(name: "UserGifties")
 }
 
 
+type Hostie @model {
+  # Required system field:
+  id: ID! @isUnique # read-only (managed by Graphcool)
+  # Optional system fields (remove if not needed):
+  createdAt: DateTime! # read-only (managed by Graphcool)
+  updatedAt: DateTime! # read-only (managed by Graphcool)
+
+  token: String!
+  name: String
+  intro: String
+
+  # Every relation also required a back-relation (to determine 1:1, 1:n or n:m)
+  owner: User! @relation(name: "UserHosties")
+  botie: Botie @relation(name: "BotieHostie")
+}
+
+type Botie @model {
+  # Required system field:
+  id: ID! @isUnique # read-only (managed by Graphcool)
+  # Optional system fields (remove if not needed):
+  createdAt: DateTime! # read-only (managed by Graphcool)
+  updatedAt: DateTime! # read-only (managed by Graphcool)
+
+  name: String
+  intro: String
+
+  # Every relation also required a back-relation (to determine 1:1, 1:n or n:m)
+  owner: User! @relation(name: "UserBoties")
+  hostie: Hostie @relation(name: "BotieHostie")
+  giftieList: [Giftie!]! @relation(name: "BotiesGifties")
+}
+
+type Giftie @model {
+  # Required system field:
+  id: ID! @isUnique # read-only (managed by Graphcool)
+  # Optional system fields (remove if not needed):
+  createdAt: DateTime! # read-only (managed by Graphcool)
+  updatedAt: DateTime! # read-only (managed by Graphcool)
+
+  name: String
+  intro: String
+
+  gist: String!
+
+  owner: User! @relation(name: "UserGifties")
+  botieList: [Botie!]! @relation(name: "BotiesGifties")
+}
