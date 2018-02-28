@@ -10,5 +10,19 @@
   },
   "devDependencies": {
     "eslint": "^4.17.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatie/graphql.git"
+  },
+  "author": {
+    "name": "Huan LI",
+    "email": "zixia@zixia.net",
+    "url": "https://www.zixia.net"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/chatie/graphql/issues"
+  },
+  "homepage": "https://github.com/chatie/graphql#readme"
 }

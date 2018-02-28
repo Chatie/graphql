@@ -1,0 +1,16 @@
+type User @model {
+  # Required system field:
+  id:         ID! @isUnique # read-only (managed by Graphcool)
+  createdAt:  DateTime! # read-only (managed by Graphcool)
+  updatedAt:  DateTime! # read-only (managed by Graphcool)
+
+  email:    String! @isUnique
+  nickname: String! @isUnique
+
+  name:   String
+  intro:  String
+
+  hostieList: [Hostie!]!  @relation(name: "UserHosties")
+  botieList:  [Botie!]!   @relation(name: "UserBoties")
+  giftieList: [Giftie!]!  @relation(name: "UserGifties")
+}

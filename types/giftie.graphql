@@ -1,0 +1,14 @@
+type Giftie @model {
+  # Required system field:
+  id:         ID! @isUnique # read-only (managed by Graphcool)
+  createdAt:  DateTime!     # read-only (managed by Graphcool)
+  updatedAt:  DateTime!     # read-only (managed by Graphcool)
+
+  name:   String
+  intro:  String
+
+  gist:   String!
+
+  owner:      User!     @relation(name: "UserGifties")
+  botieList:  [Botie!]! @relation(name: "BotiesGifties")
+}
