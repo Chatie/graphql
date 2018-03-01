@@ -7,9 +7,12 @@
   "scripts": {
     "clean": "shx rm -fr dist/*",
     "deploy": "graphcool deploy",
+    "deploy:dry": "graphcool deploy --dry-run",
+    "deploy:local": "graphcool deploy -t dev",
     "dist": "npm run clean && tsc",
     "lint": "tsc --noEmit",
-    "test": "graphcool deploy --dry-run"
+    "local:up": "graphcool local up",
+    "test": "npm run lint && npm run local:up && npm run deploy:local"
   },
   "dependencies": {
     "graphcool-lib": "^0.1.0",

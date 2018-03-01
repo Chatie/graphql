@@ -1,3 +1,4 @@
 targets:
   prod: shared-ap-northeast-1/cjdbw710k0zpr0129sv35o79e
   default: prod
+  dev: local/cje8q7go30004017072lm7r5f

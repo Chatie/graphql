@@ -43,6 +43,10 @@ graphcool deploy
 1. quicktype: [Build better apps faster by generating types from data.](https://quicktype.io)
 1. [Apollo Client + TypeScript example](https://medium.com/@borekb/apollo-client-typescript-example-99febdaa18fa)
 
+## NPM Scoped Module
+
+* [publishing scoped module](https://github.com/npm/npm/issues/12194#issuecomment-279226735)
+
 # AUTHOR
 
 [Huan LI](http://linkedin.com/in/zixia) \<zixia@zixia.net\>
