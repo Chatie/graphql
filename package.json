@@ -2,6 +2,10 @@
   "name": "@chatie/graphql",
   "version": "0.0.1",
   "description": "Chatie Graphcool Service",
+  "scripts": {
+    "lint": "echo lint",
+    "test": "echo test"
+  },
   "dependencies": {
     "graphcool-lib": "^0.1.0",
     "isomorphic-fetch": "^2.2.1",
