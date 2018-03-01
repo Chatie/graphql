@@ -1,5 +1,5 @@
 # GRAPHQL
-Chatie GraphQL Schema &amp; Settings
+WIP: Chatie GraphQL Schema &amp; Settings
 
 Graph Backend as a Service - GraphCool: https://graph.cool
 

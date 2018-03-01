@@ -16,10 +16,10 @@ jobs:
           command: npm run lint
       - run:
           name: Start Graph Cool Local Cluster
-          command: npm run local:up
+          command: npm run gc:local:up
       - run:
-          name: Deploy Local
-          command: npm run deploy:local
+          name: Deploy to Local Cluster
+          command: npm run gc:deploy:local
       # - run:
       #     name: Run tests
       #     command: docker run -it --network container:a77d5a5e2299 -v $PWD:/ node bash test.sh
