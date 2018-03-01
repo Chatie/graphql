@@ -11,7 +11,7 @@
     "deploy:local": "graphcool deploy -t dev",
     "dist": "npm run clean && tsc",
     "lint": "tsc --noEmit",
-    "local:up": "graphcool local up",
+    "local:up": "DEBUG=* graphcool local up",
     "test": "npm run lint && npm run local:up && npm run deploy:local"
   },
   "dependencies": {
