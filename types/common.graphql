@@ -1,0 +1,6 @@
+enum Status {
+  OFF
+  ON
+  PENDING_OFF
+  PENDING_ON
+}

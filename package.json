@@ -9,6 +9,7 @@
     "jwks-rsa": "^1.2.1"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.2",
     "eslint": "^4.17.0"
   },
   "repository": {

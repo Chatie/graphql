@@ -1,13 +1,8 @@
-enum HostieStatus {
-  OFFLINE
-  ONLINE
-}
-
-enum HostieRuntime {
+enum System {
   UNKNOWN
   LINUX
   WINDOWS
-  APPLE
+  MAC
   DOCKER
   ELECTRON
 }
@@ -18,12 +13,13 @@ type Hostie @model {
   createdAt:  DateTime!     # read-only (managed by Graphcool)
   updatedAt:  DateTime!     # read-only (managed by Graphcool)
 
-  intro:    String
-  key:      String!
+  note:     String
+  key:      String! @isUnique
   name:     String
+  version:  String
 
-  status:   HostieStatus!
-  runtime:  HostieRuntime
+  status: Status! @defaultValue(value: OFF)
+  system: System! @defaultValue(value: UNKNOWN)
 
   # Every relation also required a back-relation (to determine 1:1, 1:n or n:m)
   owner: User! @relation(name: "UserHosties")

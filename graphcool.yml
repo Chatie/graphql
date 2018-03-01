@@ -17,6 +17,7 @@
 # In the types.graphql you define your data schema
 types:
   - ./types/botie.graphql
+  - ./types/common.graphql
   - ./types/giftie.graphql
   - ./types/hostie.graphql
   - ./types/user.graphql
