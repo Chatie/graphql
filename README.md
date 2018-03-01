@@ -41,6 +41,7 @@ graphcool deploy
 1. graphql-code-generator: [GraphQL Code-Generator 1.0](https://medium.com/@dotansimha/graphql-code-generator-a34e3785e6fb)
 1. apollo-codegen: [Apollo GraphQL code generator](https://github.com/apollographql/apollo-codegen)
 1. quicktype: [Build better apps faster by generating types from data.](https://quicktype.io)
+1. [Apollo Client + TypeScript example](https://medium.com/@borekb/apollo-client-typescript-example-99febdaa18fa)
 
 # AUTHOR
 
