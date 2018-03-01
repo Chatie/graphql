@@ -9,17 +9,17 @@ jobs:
       - setup_remote_docker
 
       - run:
-        name: Install
-        command: npm install
+          name: Install
+          command: npm install
       - run:
-        name: Linting
-        command: npm run lint
+          name: Linting
+          command: npm run lint
       - run:
-        name: Start Graph Cool Local Cluster
-        command: npm run local:up
+          name: Start Graph Cool Local Cluster
+          command: npm run local:up
       - run:
-        name: Deploy Local
-        command: npm run deploy:local
+          name: Deploy Local
+          command: npm run deploy:local
       # - run:
       #     name: Run tests
       #     command: docker run -it --network container:a77d5a5e2299 -v $PWD:/ node bash test.sh
