@@ -3,22 +3,19 @@ Chatie GraphQL Schema &amp; Settings
 
 Graph Backend as a Service - GraphCool: https://graph.cool
 
-## Setup Environment
+## Develop
 
 ```shell
-sudo npm install -g graphcool
+npm install
+npm run gc:login
+npm run gc:deploy
+npm run gc:playground
 ```
 
-## Development
+## Test
 
 ```shell
-graphcool playground
-```
-
-## Deploy
-
-```shell
-graphcool deploy
+npm test
 ```
 
 # RESOURCES
