@@ -1,10 +1,15 @@
 {
   "name": "@chatie/graphql",
   "version": "0.0.2",
-  "description": "Chatie Graphcool Service",
+  "description": "Chatie GraphQL Service",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "lint": "echo lint",
-    "test": "echo test"
+    "clean": "shx rm -fr dist/*",
+    "deploy": "graphcool deploy",
+    "dist": "npm run clean && tsc",
+    "lint": "tsc --noEmit",
+    "test": "graphcool deploy --dry-run"
   },
   "dependencies": {
     "graphcool-lib": "^0.1.0",
@@ -13,9 +18,16 @@
     "jwks-rsa": "^1.2.1"
   },
   "devDependencies": {
+    "@types/blue-tape": "^0.1.31",
+    "@types/node": "^9.4.6",
     "babel-eslint": "^8.2.2",
+    "blue-tape": "^1.0.0",
     "eslint": "^4.17.0",
-    "git-scripts": "^0.2.1"
+    "git-scripts": "^0.2.1",
+    "graphcool": "^0.11.5",
+    "shx": "^0.2.2",
+    "ts-node": "^5.0.0",
+    "typescript": "^2.7.2"
   },
   "git": {
     "scripts": {
@@ -35,5 +47,11 @@
   "bugs": {
     "url": "https://github.com/chatie/graphql/issues"
   },
-  "homepage": "https://github.com/chatie/graphql#readme"
+  "homepage": "https://github.com/chatie/graphql#readme",
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist/*",
+    "package.json"
+  ]
 }
