@@ -26,7 +26,7 @@ functions:
 
   hello:
     handler:
-      code: src/hello.js
+      code: src/hello.ts
     type: resolver
     schema: src/hello.graphql
 

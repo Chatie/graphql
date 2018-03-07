@@ -27,6 +27,9 @@
     , "dist/"
   ]
   , "include": [
-    "index.ts"
+    "index.ts",
+    "bin/*.ts",
+    "scripts/*.ts",
+    "tests/*.ts"
   ]
 }
