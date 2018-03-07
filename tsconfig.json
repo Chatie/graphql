@@ -19,6 +19,7 @@
     , "traceResolution": false
     , "lib": [
         "es2016"
+      , "esnext"
       , "dom"
     ]
   }

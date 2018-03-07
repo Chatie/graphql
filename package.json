@@ -14,7 +14,7 @@
     "gc:login": "graphcool login",
     "dist": "npm run clean && tsc",
     "lint": "npm run lint:ts",
-    "lint:ts": "npm run clean && echo tslint v`tslint --version` && tslint --project tsconfig.json \"{bin,examples,scripts,src,tests,}/**/*.ts\" --exclude \"test/fixture/**\" --exclude \"dist/\" --exclude \"node_modules\" && tsc --noEmit",
+    "lint:ts": "npm run clean && echo tslint v`tslint --version` && tslint --project tsconfig.json --exclude \"tests/fixture/**\" --exclude \"dist/\" && tsc --noEmit",
     "gc:playground": "graphcool playground",
     "generate-schema": "ts-node scripts/generate-schema",
     "test:dev": "blue-tape -r ts-node/register -r source-map-support/register \"tests/**/*.spec.ts\" \"src/**/.spec.ts\"",
