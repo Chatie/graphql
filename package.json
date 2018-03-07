@@ -48,7 +48,7 @@
     "node-fetch": "^1.7.3",
     "shx": "^0.2.2",
     "subscriptions-transport-ws": "^0.9.6",
-    "ts-node": "^5.0.0",
+    "ts-node": "^5.0.1",
     "tslint": "^5.9.1",
     "typescript": "^2.7.2"
   },

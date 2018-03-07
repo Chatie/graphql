@@ -1,21 +1,21 @@
 #!/usr/bin/env ts-node
 import * as dotenv from 'dotenv'
+dotenv.config()
+
 import * as execa from 'execa'
 
-import { ENDPOINT } from '../'
-
-dotenv.config()
+import { ENDPOINTS } from '../'
 
 // introspect GitHub API and save the result to `schema.json`
 execa.sync('apollo-codegen', [
   'introspect-schema',
-  ENDPOINT.simple,
+  ENDPOINTS.simple,
   '--output',
   'schema.json',
   '--header',
   'Authorization: bearer ' + process.env.GC_TOKEN,
-]);
-console.log('schema.json generated');
+])
+console.log('schema.json generated')
 
 // inpsect actual queries in `index.ts` and generate TypeScript types in `schema.ts`
 execa.sync('apollo-codegen', [
@@ -30,5 +30,5 @@ execa.sync('apollo-codegen', [
   '--output',
   'schema.ts',
   '--add-typename',
-]);
-console.log('schema.ts generated');
+])
+console.log('schema.ts generated')
