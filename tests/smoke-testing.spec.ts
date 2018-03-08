@@ -222,19 +222,10 @@ test('subscription', async t => {
   t.equal(changes.Hostie && changes.Hostie.mutation, _ModelMutationType.CREATED, 'should receive CREATED data')
 })
 
-test.only('watchQuery/subscribeToMore', async t => {
+test('watchQuery/subscribeToMore', async t => {
   const hostieQuery = apollo.watchQuery<AllHostiesQuery>({
     query: GQL_ALL_HOSTIES,
   })
-
-  let hostieList
-  const hostieSubscription = hostieQuery.subscribe(
-    ({ data }) => {
-      hostieList = [...data.allHosties]
-      console.log('hostieList:', hostieList)
-    },
-  )
-  console.log(typeof hostieSubscription)
 
   hostieQuery.subscribeToMore({
     document: GQL_SUBSCRIBE_HOSTIE,
@@ -294,4 +285,15 @@ test.only('watchQuery/subscribeToMore', async t => {
     },
   })
 
+  let hostieList
+  const hostieSubscription = hostieQuery.subscribe(
+    ({ data }) => {
+      hostieList = [...data.allHosties]
+      console.log('hostieList:', hostieList)
+    },
+  )
+
+  // hostieSubscription.unsubscribe()
+  // wsClient.close()
+  t.ok('todo')
 })

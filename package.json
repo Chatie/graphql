@@ -11,6 +11,7 @@
     "gc:deploy:local": "graphcool deploy -t dev",
     "gc:local:pull": "graphcool local pull",
     "gc:local:up": "DEBUG=* graphcool local up",
+    "gc:local:stop": "graphcool local stop",
     "gc:login": "graphcool login",
     "dist": "npm run clean && tsc",
     "lint": "npm run lint:ts",
