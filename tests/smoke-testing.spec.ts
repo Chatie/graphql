@@ -22,19 +22,31 @@ import * as WebSocket from 'ws'
 
 import { ENDPOINTS }            from '../'
 import {
+  TEST,
+  _ModelMutationType,
   AllHostiesQuery,
   CreateHostieMutation,
   CurrentUserQuery,
   SubscribeHostieSubscription,
 }                               from '../schema'
+// import { TEST } from '../test-enum'
+
+// console.log('test.a:', TEST.A)
+// console.log(_ModelMutationType.CREATED)
+
+console.log('test:', TEST.B)
 
 const wsClient = new SubscriptionClient(
   ENDPOINTS.subscriptions,
   {
     reconnect: true,
     timeout: 30000,
+    /**
+     * not accessToken ???
+     * See: https://github.com/apollographql/apollo-client/blob/master/docs/source/features/subscriptions.md#authentication-over-websocket
+     */
     connectionParams: {
-      accessToken: process.env.GC_TOKEN || null,
+      authToken: process.env.GC_TOKEN || null,
     },
     // connectionCallback: (error, result) => {
     //   console.log('connection callback:', error, result)
@@ -82,22 +94,58 @@ const apollo  = new ApolloClient({
   cache,
 })
 
-test('query', async t => {
-  const gqlAllHosties = gql`
-    query AllHosties {
-      allHosties {
+const GQL_ALL_HOSTIES = gql`
+  query AllHosties {
+    allHosties {
+      id,
+      name,
+      key,
+      owner {
+        name,
+      }
+    }
+  }
+`
+
+const GQL_CREATE_HOSTIE = gql`
+  mutation CreateHostie(
+    $name:    String!,
+    $ownerId: ID!,
+  ) {
+    createHostie(
+      key:      $name,
+      name:     $name,
+      ownerId:  $ownerId,
+    ) {
+      id,
+      name,
+    }
+  }
+`
+
+const GQL_SUBSCRIBE_HOSTIE = gql`
+  subscription SubscribeHostie{
+    Hostie {
+      mutation,
+      node {
         id,
         name,
         key,
         owner {
           name,
-        }
-      }
+        },
+      },
+      previousValues {
+        id,
+        key,
+      },
     }
-  `
+  }
+`
 
+test('query', async t => {
   const allHosties = await apollo.query<AllHostiesQuery>({
-    query: gqlAllHosties,
+    query: GQL_ALL_HOSTIES,
   }).then(x => x.data.allHosties)
 
   t.ok(allHosties.length > 0, 'query should get hosties')
@@ -121,28 +169,12 @@ test('current user', async t => {
   t.equal(currentUser && currentUser.email, 'zixia@zixia.net', 'query should get current user email')
 })
 
-const gqlCreateHostie = gql`
-mutation CreateHostie(
-  $name:    String!,
-  $ownerId: ID!,
-) {
-  createHostie(
-    key:      $name,
-    name:     $name,
-    ownerId:  $ownerId,
-  ) {
-    id,
-    name,
-  }
-}
-`
-
 test('mutatation', async t => {
   const name    = cuid()
   const ownerId = 'cjdhklw5j0vp00110rcnftm7l'
 
   const mutationResult: CreateHostieMutation = await apollo.mutate<CreateHostieMutation>({
-    mutation: gqlCreateHostie,
+    mutation: GQL_CREATE_HOSTIE,
     variables: {
       name,
       ownerId,
@@ -155,26 +187,11 @@ test('mutatation', async t => {
 })
 
 test('subscription', async t => {
-  const gqlSubscribeHostie = gql`
-    subscription SubscribeHostie{
-      Hostie {
-        mutation,
-        node {
-          id,
-          key,
-        },
-        previousValues {
-          id,
-          key,
-        },
-      }
-    }
-  `
   const subscriptionFuture = new Promise<SubscribeHostieSubscription>((resolve, reject) => {
     // console.log('inside subscription promise')
     const hostieSubscription = apollo
     .subscribe({
-      query: gqlSubscribeHostie,
+      query: GQL_SUBSCRIBE_HOSTIE,
     })
     .subscribe(
       ({data}) => {
@@ -196,7 +213,7 @@ test('subscription', async t => {
 
   // console.log('mutate begin')
   await apollo.mutate<CreateHostieMutation>({
-    mutation: gqlCreateHostie,
+    mutation: GQL_CREATE_HOSTIE,
     variables: {
       name,
       ownerId,
@@ -209,5 +226,78 @@ test('subscription', async t => {
   console.log('subscription end')
 
   t.ok(changes.Hostie, 'should receive change subscription')
-  t.equal(changes.Hostie && changes.Hostie.mutation, 'CREATED', 'should receive CREATED data')
+  t.equal(changes.Hostie && changes.Hostie.mutation, _ModelMutationType.CREATED, 'should receive CREATED data')
+})
+
+test.only('watchQuery/subscribeToMore', async t => {
+  const hostieQuery = apollo.watchQuery<AllHostiesQuery>({
+    query: GQL_ALL_HOSTIES,
+  })
+
+  let hostieList
+  const hostieSubscription = hostieQuery.subscribe(
+    ({ data }) => {
+      hostieList = [...data.allHosties]
+      console.log('hostieList:', hostieList)
+    },
+  )
+  console.log(typeof hostieSubscription)
+
+  hostieQuery.subscribeToMore({
+    document: GQL_SUBSCRIBE_HOSTIE,
+    updateQuery: (prev, { subscriptionData }) => {
+      const data: SubscribeHostieSubscription = subscriptionData.data
+      if (!data || !data.Hostie) {
+        return prev
+      }
+
+      console.log('prev:', JSON.stringify(prev))
+      console.log('updated data:', data)
+
+      let result
+      const node = data.Hostie.node
+      const previousValues = data.Hostie.previousValues
+
+      switch (data.Hostie.mutation) {
+        case _ModelMutationType.CREATED:
+          result = {
+            ...prev,
+            allHosties: [...prev['allHosties'], node],
+          }
+          break
+        case _ModelMutationType.UPDATED:
+          result = {
+            ...prev,
+          }
+          if (node) {
+            result.allHosties.some(item => {
+              if (item.id === node.id) {
+                Object.assign(item, node)
+                return true
+              }
+              return false
+            })
+          }
+          break
+        case _ModelMutationType.DELETED:
+          result = {
+            ...prev,
+          }
+          if (previousValues) {
+            for (let i = result.allHosties.length; i--;) {
+              if (result.allHosties[i].id === previousValues.id) {
+                result.allHosties.splice(i, 1)
+                break
+              }
+            }
+          }
+          break
+        default:
+          throw new Error('unknown mutation type:' + data.Hostie.mutation)
+      }
+
+      return result
+    },
+  })
+
 })
