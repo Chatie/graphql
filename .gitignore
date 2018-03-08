@@ -60,5 +60,5 @@ typings/
 yarn.lock
 package-lock.json
 /dist/
-/schema.json
-/schema.ts
+/downloaded-schema.json
+/generated-schema.ts

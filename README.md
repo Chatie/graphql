@@ -21,6 +21,7 @@ npm test
 # RESOURCES
 
 1. [GraphQL Schema Language Cheat Sheet](https://github.com/sogko/graphql-schema-language-cheat-sheet)
+1. [watchQuery + Subscriptions](https://alligator.io/angular/graphql-subscriptions/)
 
 ## Background Knoweledge
 

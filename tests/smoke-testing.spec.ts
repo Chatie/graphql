@@ -22,19 +22,12 @@ import * as WebSocket from 'ws'
 
 import { ENDPOINTS }            from '../'
 import {
-  TEST,
   _ModelMutationType,
   AllHostiesQuery,
   CreateHostieMutation,
   CurrentUserQuery,
   SubscribeHostieSubscription,
-}                               from '../schema'
-// import { TEST } from '../test-enum'
-
-// console.log('test.a:', TEST.A)
-// console.log(_ModelMutationType.CREATED)
-
-console.log('test:', TEST.B)
+}                               from '../generated-schema'
 
 const wsClient = new SubscriptionClient(
   ENDPOINTS.subscriptions,

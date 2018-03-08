@@ -11,24 +11,24 @@ execa.sync('apollo-codegen', [
   'introspect-schema',
   ENDPOINTS.simple,
   '--output',
-  'schema.json',
+  'downloaded-schema.json',
   '--header',
   'Authorization: bearer ' + process.env.GC_TOKEN,
 ])
-console.log('schema.json generated')
+console.log('downloaded-schema.json generated')
 
 // inpsect actual queries in `index.ts` and generate TypeScript types in `schema.ts`
 execa.sync('apollo-codegen', [
   'generate',
   'tests/*.ts',
   '--schema',
-  'schema.json',
+  'downloaded-schema.json',
   '--target',
   'typescript',
   '--tag-name',
   'gql',
   '--output',
-  'schema.ts',
+  'generated-schema.ts',
   '--add-typename',
 ])
-console.log('schema.ts generated')
+console.log('generated-schema.ts generated')
