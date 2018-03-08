@@ -264,13 +264,12 @@ test.only('watchQuery/subscribeToMore', async t => {
             allHosties: [...prev['allHosties']],
           }
           if (node) {
-            result.allHosties.some(item => {
-              if (item.id === node.id) {
-                Object.assign(item, node)
-                return true
+            for (let i = result.allHosties.length; i--;) {
+              if (result.allHosties[i].id === node.id) {
+                result.allHosties[i] = node
+                break
               }
-              return false
-            })
+            }
           }
           break
         case _ModelMutationType.DELETED:
