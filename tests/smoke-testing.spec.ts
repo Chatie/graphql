@@ -6,7 +6,7 @@ import * as test from 'blue-tape'
 
 import { InMemoryCache }      from 'apollo-cache-inmemory'
 import { ApolloClient }       from 'apollo-client'
-import { HttpLink }           from 'apollo-link-http'
+import { BatchHttpLink }           from 'apollo-link-batch-http'
 import { WebSocketLink }      from 'apollo-link-ws'
 import {
   ApolloLink,
@@ -63,7 +63,7 @@ const wsClientConnected = new Promise(resolve => {
 // wsClient.onReconnecting(e => console.log('on re-connecting:', e))
 
 const wsLink = new WebSocketLink(wsClient)
-const httpLink = new HttpLink({
+const httpLink = new BatchHttpLink({
   uri: ENDPOINTS.simple,
   fetch,
   headers: {
@@ -261,6 +261,7 @@ test.only('watchQuery/subscribeToMore', async t => {
         case _ModelMutationType.UPDATED:
           result = {
             ...prev,
+            allHosties: [...prev['allHosties']],
           }
           if (node) {
             result.allHosties.some(item => {
@@ -275,6 +276,7 @@ test.only('watchQuery/subscribeToMore', async t => {
         case _ModelMutationType.DELETED:
           result = {
             ...prev,
+            allHosties: [...prev['allHosties']],
           }
           if (previousValues) {
             for (let i = result.allHosties.length; i--;) {
