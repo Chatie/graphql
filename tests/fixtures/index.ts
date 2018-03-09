@@ -1,3 +1,6 @@
+import * as fs    from 'fs'
+import * as path  from 'path'
+
 import {
   InMemoryCache,
   NormalizedCacheObject,
@@ -15,7 +18,9 @@ import { SubscriptionClient } from 'subscriptions-transport-ws'
 import fetch          from 'node-fetch'
 import * as WebSocket from 'ws'
 
-import { LocalServer }  from '../src/local-server'
+import { LocalServer }  from '../../'
+
+const FIXTURE_GRAPHCOOL_INFO_FILE = path.join(__dirname, 'graphql-info.txt')
 
 export async function* apolloFixture() {
   const localServer     = new LocalServer()
@@ -86,6 +91,19 @@ export async function* apolloFixture() {
   await apollo.resetStore()
   await wsClient.close()
   await localServer.reset()
+}
+
+export function* graphcoolInfoFixture() {
+  const info = fs.readFileSync(FIXTURE_GRAPHCOOL_INFO_FILE).toString()
+
+  yield {
+    info,
+    simple: 'http://localhost:60000/simple/v1/cje8q7go30004017072lm7r5f',
+    relay:  'http://localhost:60000/relay/v1/cje8q7go30004017072lm7r5f',
+    subscriptions: 'ws://localhost:60000/subscriptions/v1/cje8q7go30004017072lm7r5f',
+    projectId: 'cje8q7go30004017072lm7r5f',
+  }
+
 }
 
 export { NormalizedCacheObject }

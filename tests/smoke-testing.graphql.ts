@@ -81,3 +81,39 @@ export const GQL_SUBSCRIBE_HOSTIE = gql`
     }
   }
 `
+
+export const GQL_CREATE_USER = gql`
+  mutation(
+    $email:     String!,
+    $nickname:  String!,
+    $name:      String,
+  ) {
+    createUser(
+      email:    $email,
+      nickname: $nickname,
+      name:     $name,
+    ) {
+      id
+    }
+  }
+`
+
+export const GQL_GENERATE_USER_TOKEN = gql`
+  mutation GenerateUserToken(
+    $pat:       String!,
+    $projectId: String!,
+    $userId:    ID!,
+  ) {
+    generateUserToken(
+      input: {
+        pat:              $pat,
+        projectId:        $projectId,
+        userId:           $userId,
+        modelName:        "User",
+        clientMutationId: "static"
+      }
+    ) {
+      token
+    }
+  }
+`

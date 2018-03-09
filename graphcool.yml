@@ -45,4 +45,5 @@ permissions:
 # https://www.graph.cool/docs/reference/auth/authentication/authentication-tokens-eip7ahqu5o
 rootTokens:
   - auth0
+  - dev
 

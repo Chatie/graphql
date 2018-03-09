@@ -4,7 +4,7 @@ import { Endpoints }  from './config'
 
 export class LocalServer {
   private graphcoolInfo:      string
-  private graphcoolEndpoints: Endpoints
+  private graphcoolRootToken: string
 
   constructor() {
     //
@@ -60,10 +60,6 @@ export class LocalServer {
   }
 
   public async endpoints(info?: string): Promise<Endpoints> {
-    if (this.graphcoolEndpoints) {
-      return this.graphcoolEndpoints
-    }
-
     if (!info) {
       info = await this.info()
     }
@@ -87,7 +83,46 @@ export class LocalServer {
       }
     })
 
-    this.graphcoolEndpoints = endpoints
     return endpoints
+  }
+
+  public async projectId(info?: string): Promise<string> {
+    if (!info) {
+      info = await this.info()
+    }
+
+    const REGEX = /\s+local\/([^\s]+)\s*$/m
+    const match = REGEX.exec(info)
+    if (!match || !match[1]) {
+      throw new Error('no project id found!')
+    }
+    return match[1]
+  }
+
+  public async rootToken(): Promise<string> {
+    if (this.graphcoolRootToken) {
+      return this.graphcoolRootToken
+    }
+
+    const child = spawn('graphcool', [
+      'root-token',
+      'dev',
+    ])
+    // child.stdout.pipe(process.stdout)
+    const output = await new Promise<string>((resolve, reject) => {
+      let buffer = ''
+      child.stdout.on('readable', () => {
+        const data = child.stdout.read()
+        if (data) {
+          buffer += data
+        }
+      })
+      child.stdout.on('end',    () => resolve(buffer.toString().trim()))
+      child.stdout.on('error',  reject)
+    })
+    await new Promise(r => child.once('exit', r))
+
+    this.graphcoolRootToken = output
+    return output
   }
 }

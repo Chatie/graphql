@@ -3,18 +3,20 @@ import * as test from 'blue-tape'
 
 import { LocalServer } from './local-server'
 
+import { graphcoolInfoFixture }  from '../tests/fixtures/'
+
 test('reset', async t => {
   const localServer = new LocalServer()
 
   await localServer.reset()
-  t.ok('reset success!')
+  t.pass('reset success!')
 })
 
 test('up', async t => {
   const localServer = new LocalServer()
 
   await localServer.up()
-  t.ok('up success!')
+  t.pass('up success!')
 })
 
 test('info', async t => {
@@ -25,22 +27,29 @@ test('info', async t => {
 })
 
 test('endpoints', async t => {
-  const INFO_FIXTURE = `
-API:           Endpoint:
-────────────── ────────────────────────────────────────────────────────────
-Simple         http://localhost:60000/simple/v1/cje8q7go30004017072lm7r5f
-Relay          http://localhost:60000/relay/v1/cje8q7go30004017072lm7r5f
-Subscriptions  ws://localhost:60000/subscriptions/v1/cje8q7go30004017072lm7r5f
-File           http://localhost:60000/file/v1/cje8q7go30004017072lm7r5f
-`
-  const EXPECTED_SIMPLE = 'http://localhost:60000/simple/v1/cje8q7go30004017072lm7r5f'
-  const EXPECTED_RELAY = 'http://localhost:60000/relay/v1/cje8q7go30004017072lm7r5f'
-  const EXPECTED_SUBSCRIPTIONS = 'ws://localhost:60000/subscriptions/v1/cje8q7go30004017072lm7r5f'
+  for await (const INFO_FIXTURE of graphcoolInfoFixture()) {
+    const localServer = new LocalServer()
+    const endpoints = await localServer.endpoints(INFO_FIXTURE.info)
 
+    t.equal(endpoints.simple,         INFO_FIXTURE.simple,        'should get simple endpoint')
+    t.equal(endpoints.relay,          INFO_FIXTURE.relay,         'should get relay endpoint')
+    t.equal(endpoints.subscriptions,  INFO_FIXTURE.subscriptions, 'should get subscriptions endpoint')
+  }
+})
+
+test('projectId', async t => {
+  for await (const INFO_FIXTURE of graphcoolInfoFixture()) {
+    const localServer = new LocalServer()
+    const projectId = await localServer.projectId(INFO_FIXTURE.info)
+    t.equal(projectId, INFO_FIXTURE.projectId, 'should get the project id right')
+  }
+})
+
+test('rootToken', async t => {
   const localServer = new LocalServer()
-  const endpoints = await localServer.endpoints(INFO_FIXTURE)
+  const rootToken = await localServer.rootToken()
+  t.ok(/^[^\s]+$/.test(rootToken), 'should get root JWT token')
 
-  t.equal(endpoints.simple,         EXPECTED_SIMPLE,        'should get simple endpoint')
-  t.equal(endpoints.relay,          EXPECTED_RELAY,         'should get relay endpoint')
-  t.equal(endpoints.subscriptions,  EXPECTED_SUBSCRIPTIONS, 'should get subscriptions endpoint')
+  const dotNum = (rootToken.match(/\./g) || []).length
+  t.equal(dotNum, 2, 'should include two dot(.)s for JWT token')
 })

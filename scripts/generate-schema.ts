@@ -2,33 +2,64 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
-import * as execa from 'execa'
+import { spawn }  from 'child_process'
 
-import { ENDPOINTS } from '../'
+import { LocalServer } from '../'
 
-// introspect GitHub API and save the result to `schema.json`
-execa.sync('apollo-codegen', [
-  'introspect-schema',
-  ENDPOINTS.simple,
-  '--output',
-  'downloaded-schema.json',
-  '--header',
-  'Authorization: bearer ' + process.env.GC_TOKEN,
-])
-console.log('downloaded-schema.json generated')
+const JSON_SCHEMA_FILE  = 'downloaded-schema.json'
+const TS_SCHEMA_FILE    = 'generated-schema.ts'
 
-// inpsect actual queries in `index.ts` and generate TypeScript types in `schema.ts`
-execa.sync('apollo-codegen', [
-  'generate',
-  'tests/*.ts',
-  '--schema',
-  'downloaded-schema.json',
-  '--target',
-  'typescript',
-  '--tag-name',
-  'gql',
-  '--output',
-  'generated-schema.ts',
-  '--add-typename',
-])
-console.log('generated-schema.ts generated')
+async function main() {
+  const localServer     = new LocalServer()
+  const localEndpoints  = await localServer.endpoints()
+
+  await introspectSchema(localEndpoints.simple, JSON_SCHEMA_FILE)
+  console.log(`${JSON_SCHEMA_FILE} generated`)
+
+  await generate(JSON_SCHEMA_FILE, TS_SCHEMA_FILE)
+  console.log(`${TS_SCHEMA_FILE} generated`)
+}
+
+async function introspectSchema(
+  endpoint:       string,
+  jsonSchemaFile: string,
+) {
+  // introspect GitHub API and save the result to `schema.json`
+  const child = spawn('apollo-codegen', [
+    'introspect-schema',
+    endpoint,
+    '--output',
+    jsonSchemaFile,
+    '--header',
+    'Authorization: bearer ' + process.env.GC_TOKEN,
+  ])
+  await new Promise(r => child.once('exit', r))
+}
+
+async function generate(
+  jsonSchemaFile: string,
+  tsSchemaFile:   string,
+) {
+  // inpsect actual queries in `index.ts` and generate TypeScript types in `schema.ts`
+  const child = spawn('apollo-codegen', [
+    'generate',
+    'tests/*.ts',
+    '--schema',
+    jsonSchemaFile,
+    '--target',
+    'typescript',
+    '--tag-name',
+    'gql',
+    '--output',
+    tsSchemaFile,
+    '--add-typename',
+  ])
+  await new Promise(r => child.once('exit', r))
+}
+
+main()
+.then(() => console.log('done.'))
+.catch(e => {
+  console.error(e)
+  process.exit(1)
+})
