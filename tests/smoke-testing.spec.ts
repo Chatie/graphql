@@ -172,6 +172,14 @@ test('mutatation', async t => {
       name,
       ownerId,
     },
+    update: (proxy, { data: { createHostie } }) => {
+      // Read the data from our cache for this query.
+      const data = proxy.readQuery<AllHostiesQuery>({ query: GQL_ALL_HOSTIES })
+      // Add our comment from the mutation to the end.
+      data.allHosties.push(createHostie)
+      // Write our data back to the cache.
+      proxy.writeQuery({ query: GQL_ALL_HOSTIES, data })
+    },
   }).then(x => x.data)
   const hostie = mutationResult.createHostie
   // console.log(hostie && hostie.name)
