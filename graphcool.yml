@@ -26,9 +26,9 @@ functions:
 
   hello:
     handler:
-      code: src/hello.ts
+      code: src/graphcool/hello.ts
     type: resolver
-    schema: src/hello.graphql
+    schema: src/graphcool/hello.graphql
 
 
 # Model/Relation permissions are used to limit the API access
