@@ -1,16 +1,25 @@
 import { spawn }  from 'child_process'
 
-import { Endpoints }  from './config'
+import Graphcool  from 'graphcool-lib'
+
+import {
+  Endpoints,
+  log,
+}             from './config'
 
 export class LocalServer {
   private graphcoolInfo:      string
   private graphcoolRootToken: string
+  private graphcoolLib:       Graphcool
 
   constructor() {
+    log.verbose('LocalServer', 'constructor()')
     //
   }
 
   public async reset(): Promise<void> {
+    log.verbose('LocalServer', 'reset()')
+
     const child = spawn('graphcool', [
       'reset',
       '-t',
@@ -23,6 +32,8 @@ export class LocalServer {
   }
 
   public async up(): Promise<void> {
+    log.verbose('LocalServer', 'up()')
+
     const child = spawn('graphcool', [
       'local',
       'up',
@@ -32,6 +43,8 @@ export class LocalServer {
   }
 
   public async info(): Promise<string> {
+    log.verbose('LocalServer', 'info()')
+
     if (this.graphcoolInfo) {
       return this.graphcoolInfo
     }
@@ -60,6 +73,8 @@ export class LocalServer {
   }
 
   public async endpoints(info?: string): Promise<Endpoints> {
+    log.verbose('LocalServer', 'endpoints()')
+
     if (!info) {
       info = await this.info()
     }
@@ -74,6 +89,7 @@ export class LocalServer {
       relay:          '',
       simple:         '',
       subscriptions:  '',
+      system:         'http://localhost:60000/system',  // FIXME: get from graphcool
     }
 
     Object.keys(REGEX).forEach(k => {
@@ -86,7 +102,9 @@ export class LocalServer {
     return endpoints
   }
 
-  public async projectId(info?: string): Promise<string> {
+  public async serviceId(info?: string): Promise<string> {
+    log.verbose('LocalServer', 'serviceId()')
+
     if (!info) {
       info = await this.info()
     }
@@ -96,33 +114,104 @@ export class LocalServer {
     if (!match || !match[1]) {
       throw new Error('no project id found!')
     }
+    log.silly('LocalServer', 'serviceId() = %s', match[1])
     return match[1]
   }
 
   public async rootToken(): Promise<string> {
-    if (this.graphcoolRootToken) {
-      return this.graphcoolRootToken
+    log.verbose('LocalServer', 'rootToken()')
+
+    if (!this.graphcoolRootToken) {
+      const child = spawn('graphcool', [
+        'root-token',
+        'dev',
+      ])
+      // child.stdout.pipe(process.stdout)
+      const output = await new Promise<string>((resolve, reject) => {
+        let buffer = ''
+        child.stdout.on('readable', () => {
+          const data = child.stdout.read()
+          if (data) {
+            buffer += data
+          }
+        })
+        child.stdout.on('end',    () => resolve(buffer.toString().trim()))
+        child.stdout.on('error',  reject)
+      })
+      await new Promise(r => child.once('exit', r))
+
+      this.graphcoolRootToken = output
     }
 
-    const child = spawn('graphcool', [
-      'root-token',
-      'dev',
-    ])
-    // child.stdout.pipe(process.stdout)
-    const output = await new Promise<string>((resolve, reject) => {
-      let buffer = ''
-      child.stdout.on('readable', () => {
-        const data = child.stdout.read()
-        if (data) {
-          buffer += data
-        }
-      })
-      child.stdout.on('end',    () => resolve(buffer.toString().trim()))
-      child.stdout.on('error',  reject)
-    })
-    await new Promise(r => child.once('exit', r))
+    log.silly('LocalServer', 'rootToken() = %s', this.graphcoolRootToken)
+    return this.graphcoolRootToken
+  }
 
-    this.graphcoolRootToken = output
-    return output
+  public async graphcool() {
+    log.verbose('LocalServer', 'graphcool()')
+
+    if (!this.graphcoolLib) {
+      const lib = new Graphcool(
+        await this.serviceId(),
+        {
+          token:      await this.rootToken(),
+          endpoints:  await this.endpoints(),
+        },
+      )
+      this.graphcoolLib = lib
+    }
+    return this.graphcoolLib
+  }
+
+  public async generateUserToken(
+    userId:               string,
+    expirationInSeconds?: number,
+  ): Promise<string> {
+    log.verbose('LocalServer', 'generateUserToken(userId=%s, expirationInSeconds=%s)',
+                                userId,
+                                expirationInSeconds,
+                )
+
+    const lib   = await this.graphcool()
+    const token = await lib.generateNodeToken(
+      userId,
+      'User',
+      expirationInSeconds,
+    )
+
+    log.silly('LocalServer', 'generateUserToken() = %s', token)
+    return token
+  }
+
+  public async createUser(
+    email:    string,
+    nickname: string,
+    name?:    string,
+  ): Promise<string> {
+    log.verbose('LocalServer', 'createUser(email=%s, nickname=%s, name=%s)',
+                                email,
+                                nickname,
+                                name,
+                )
+
+    const lib       = await this.graphcool()
+    const api       = lib.api('simple/v1')
+
+    const query = `
+      mutation CreateUser {
+        createUser(
+          email: "zixia@zixia.net",
+          nickname: "zixia",
+        ) {
+          id
+        }
+      }
+    `
+    const result = await api.request<{
+      createUser: { id: string },
+    }>(query)
+
+    log.silly('LocalServer', 'createUser() = %s', result.createUser.id)
+    return result.createUser.id
   }
 }

@@ -33,13 +33,20 @@ async function introspectSchema(
     '--header',
     'Authorization: bearer ' + process.env.GC_TOKEN,
   ])
-  await new Promise(r => child.once('exit', r))
+  child.stderr.pipe(process.stderr)
+  await new Promise((resolve, reject) =>
+    child.once(
+      'exit',
+      code => code === 0 ? resolve() : reject(code),
+    ),
+  )
 }
 
 async function generate(
   jsonSchemaFile: string,
   tsSchemaFile:   string,
 ) {
+  console.log(`generating ${tsSchemaFile} from ${jsonSchemaFile}...`)
   // inpsect actual queries in `index.ts` and generate TypeScript types in `schema.ts`
   const child = spawn('apollo-codegen', [
     'generate',
@@ -54,12 +61,18 @@ async function generate(
     tsSchemaFile,
     '--add-typename',
   ])
-  await new Promise(r => child.once('exit', r))
+  child.stderr.pipe(process.stderr)
+  await new Promise((resolve, reject) =>
+    child.once(
+      'exit',
+      code => code === 0 ? resolve() : reject(code),
+    ),
+  )
 }
 
 main()
 .then(() => console.log('done.'))
 .catch(e => {
-  console.error(e)
+  console.error('main cache error:', e)
   process.exit(1)
 })

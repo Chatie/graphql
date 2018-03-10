@@ -18,7 +18,7 @@ import { SubscriptionClient } from 'subscriptions-transport-ws'
 import fetch          from 'node-fetch'
 import * as WebSocket from 'ws'
 
-import { LocalServer }  from '../../'
+import { LocalServer }      from '../../'
 
 const FIXTURE_GRAPHCOOL_INFO_FILE = path.join(__dirname, 'graphql-info.txt')
 
@@ -86,6 +86,28 @@ export async function* apolloFixture() {
 
   await connectedFuture
 
+  const randomId = Math.random()
+                        .toString()
+                        .substr(2, 7)
+
+  const GC_USER = {
+    email:    `dev-${randomId}@test.com`,
+    nickname: `testuser-${randomId}`,
+    name:     `Test User ${randomId}`,
+    id:       '',
+    token:    '',
+  }
+
+  GC_USER.id = await localServer.createUser(
+    GC_USER.email,
+    GC_USER.nickname,
+    GC_USER.name,
+  )
+
+  GC_USER.token = await localServer.generateUserToken(GC_USER.id)
+
+  apollo['USER_FIXTURE'] = GC_USER
+
   yield apollo
 
   await apollo.resetStore()
@@ -101,7 +123,8 @@ export function* graphcoolInfoFixture() {
     simple: 'http://localhost:60000/simple/v1/cje8q7go30004017072lm7r5f',
     relay:  'http://localhost:60000/relay/v1/cje8q7go30004017072lm7r5f',
     subscriptions: 'ws://localhost:60000/subscriptions/v1/cje8q7go30004017072lm7r5f',
-    projectId: 'cje8q7go30004017072lm7r5f',
+    system: 'http://localhost:60000/system',
+    serviceId: 'cje8q7go30004017072lm7r5f',
   }
 
 }

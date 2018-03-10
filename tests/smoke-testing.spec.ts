@@ -2,6 +2,8 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
+// TODO: deal with `errors` in the graphql query return body
+
 import * as test from 'blue-tape'
 
 import { ApolloClient } from 'apollo-client'
@@ -22,13 +24,11 @@ import {
   GQL_DELETE_HOSTIE,
   GQL_SUBSCRIBE_HOSTIE,
   GQL_UPDATE_HOSTIE,
-}                         from './smoke-testing.graphql'
+}                           from './smoke-testing.graphql'
 
 import {
   apolloFixture,
-}                         from './fixtures'
-
-(<any>Symbol).asyncIterator = Symbol.asyncIterator || Symbol.for('Symbol.asyncIterator')
+}                           from './fixtures'
 
 const currentUser = async (apollo: ApolloClient<any>) => {
   const user = await apollo.query<CurrentUserQuery>({

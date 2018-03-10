@@ -3,7 +3,9 @@ import * as test from 'blue-tape'
 
 import { LocalServer } from './local-server'
 
-import { graphcoolInfoFixture }  from '../tests/fixtures/'
+import {
+  graphcoolInfoFixture,
+}                       from '../tests/fixtures/'
 
 test('reset', async t => {
   const localServer = new LocalServer()
@@ -37,11 +39,11 @@ test('endpoints', async t => {
   }
 })
 
-test('projectId', async t => {
+test('serviceId', async t => {
   for await (const INFO_FIXTURE of graphcoolInfoFixture()) {
     const localServer = new LocalServer()
-    const projectId = await localServer.projectId(INFO_FIXTURE.info)
-    t.equal(projectId, INFO_FIXTURE.projectId, 'should get the project id right')
+    const serviceId = await localServer.serviceId(INFO_FIXTURE.info)
+    t.equal(serviceId, INFO_FIXTURE.serviceId, 'should get the project id right')
   }
 })
 
@@ -52,4 +54,38 @@ test('rootToken', async t => {
 
   const dotNum = (rootToken.match(/\./g) || []).length
   t.equal(dotNum, 2, 'should include two dot(.)s for JWT token')
+})
+
+test.only('createUser', async t => {
+  const EXPECTED_EMAIL = 'zixia@zixia.net'
+  const EXPECTED_NICKNAME = 'zixia'
+  const EXPECTED_NAME = 'Huan LI'
+
+  const localServer = new LocalServer()
+  await localServer.reset()
+
+  const id = await localServer.createUser(
+    EXPECTED_EMAIL,
+    EXPECTED_NICKNAME,
+    EXPECTED_NAME,
+  )
+
+  t.ok(id, 'should get user id after creation')
+})
+
+test('generateUserToken', async t => {
+  const EXPECTED_EMAIL = 'zixia1@zixia.net'
+  const EXPECTED_NICKNAME = 'zixia'
+  const EXPECTED_NAME = 'Huan LI'
+
+  const localServer = new LocalServer()
+
+  const userId = await localServer.createUser(
+    EXPECTED_EMAIL,
+    EXPECTED_NICKNAME,
+    EXPECTED_NAME,
+  )
+
+  const token = await localServer.generateUserToken(userId)
+  t.ok(token, 'should get user token after generation')
 })
