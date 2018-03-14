@@ -4,7 +4,10 @@ dotenv.config()
 
 import { spawn }  from 'child_process'
 
-import { LocalServer } from '../'
+import {
+  log,
+  LocalServer,
+}               from '../'
 
 const JSON_SCHEMA_FILE  = 'downloaded-schema.json'
 const TS_SCHEMA_FILE    = 'generated-schema.ts'
@@ -12,6 +15,8 @@ const TS_SCHEMA_FILE    = 'generated-schema.ts'
 async function main() {
   const localServer     = new LocalServer()
   const localEndpoints  = await localServer.endpoints()
+
+  log.verbose('GenerateSchema', 'main() simple endpoint: %s', localEndpoints.simple)
 
   await introspectSchema(localEndpoints.simple, JSON_SCHEMA_FILE)
   console.log(`${JSON_SCHEMA_FILE} generated`)
@@ -31,9 +36,11 @@ async function introspectSchema(
     '--output',
     jsonSchemaFile,
     '--header',
-    'Authorization: bearer ' + process.env.GC_TOKEN,
-  ])
-  child.stderr.pipe(process.stderr)
+    'Authorization: bearer ' + process.env.GRAPHCOOL_ROOT_TOKEN,
+  ], {
+    stdio: 'inherit',
+  })
+  // child.stderr.pipe(process.stderr)
   await new Promise((resolve, reject) =>
     child.once(
       'exit',
@@ -60,8 +67,10 @@ async function generate(
     '--output',
     tsSchemaFile,
     '--add-typename',
-  ])
-  child.stderr.pipe(process.stderr)
+  ], {
+    stdio: 'inherit',
+  })
+  // child.stderr.pipe(process.stderr)
   await new Promise((resolve, reject) =>
     child.once(
       'exit',

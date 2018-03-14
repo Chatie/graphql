@@ -18,13 +18,20 @@ export class LocalServer {
   }
 
   public async reset(): Promise<void> {
-    log.verbose('LocalServer', 'reset()')
+    log.warn('LocalServer', 'reset() WIP...')
 
+    /**
+     * method 1: not support local docker
+     */
     // const child = spawn('graphcool', [
     //   'reset',
     //   '-t',
     //   'dev',
     // ])
+
+    /**
+     * method 2
+     */
     const child = spawn('scripts/local-reset.sh', [], {
       shell: true,
       // stdio: 'inherit',
@@ -34,6 +41,76 @@ export class LocalServer {
 
     await new Promise(r => child.once('exit', r))
     await this.up()
+  }
+
+  public async createHostie(
+    ownerId:  string,
+    name:     string,
+    key:      string,
+  ): Promise <{[key: string]: any}> {
+    const lib = await this.graphcool()
+    const api = lib.api('simple/v1')
+
+    const mutationCreateHostie = `
+      mutation CreateHostie {
+        createHostie(
+          ownerId:  "${ownerId}",
+          name:     "${name}",
+          key:      "${key}",
+        ) {
+          id
+        }
+      }
+    `
+    const result = await api.request<{
+      createHostie: { id: string },
+    }>(mutationCreateHostie)
+
+    const hostie = result.createHostie
+    log.silly('LocalServer', 'createHostie() new id: %s', hostie.id)
+    return hostie
+  }
+
+  public async deleteAll(model: string): Promise<number> {
+    /**
+     * method 3
+     */
+    const lib = await this.graphcool()
+    const api = lib.api('simple/v1')
+
+    const queryAllHosties = `
+      query AllHosties {
+        allHosties {
+          id
+        }
+      }
+    `
+    const result = await api.request<{
+      allHosties: [{ id: string }],
+    }>(queryAllHosties)
+
+    const num = result.allHosties.length
+    log.silly('LocalServer', 'deleteAll() get %d hosties', num)
+
+    const futureList: any[] = []
+
+    for (const hostie of result.allHosties) {
+      const id = hostie.id
+      const future = api.request<{
+        deleteHostie: { id: string },
+      }>(`
+        mutation {
+          deleteHostie(id: "${id}") {
+            id
+          }
+        }
+      `)
+      futureList.push(future)
+    }
+    await Promise.all(futureList)
+    log.silly('LocalServer', 'deleteAll() deleted all hosties')
+
+    return num
   }
 
   public async up(): Promise<void> {
@@ -206,8 +283,9 @@ export class LocalServer {
     const query = `
       mutation CreateUser {
         createUser(
-          email: "zixia@zixia.net",
-          nickname: "zixia",
+          email: "${email}",
+          nickname: "${nickname}",
+          name: "${name}",
         ) {
           id
         }

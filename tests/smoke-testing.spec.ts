@@ -28,9 +28,16 @@ import {
 
 import {
   apolloFixture,
-}                           from './fixtures'
+}                           from './fixtures/'
+
+import {
+  log,
+}                           from '../'
+import { DEFAULT_ECDH_CURVE } from 'tls';
 
 const currentUser = async (apollo: ApolloClient<any>) => {
+  log.verbose('SmokeTesting', 'currentUser()')
+
   const user = await apollo.query<CurrentUserQuery>({
     query: GQL_CURRENT_USER,
   }).then(x => x.data.user)
@@ -58,7 +65,7 @@ test.skip('current user', async t => {
   }
 })
 
-test('mutatation/create', async t => {
+test('mutation/create', async t => {
   for await (const apollo of apolloFixture()) {
     const user = await currentUser(apollo)
 
@@ -73,12 +80,16 @@ test('mutatation/create', async t => {
       },
       update: (proxy, { data: { createHostie } }) => {
         // Read the data from our cache for this query.
-        const data = proxy.readQuery<AllHostiesQuery>({ query: GQL_ALL_HOSTIES })
-        if (data) {
-          // Add our comment from the mutation to the end.
-          data.allHosties.push(createHostie)
-          // Write our data back to the cache.
-          proxy.writeQuery({ query: GQL_ALL_HOSTIES, data })
+        try {
+          const data = proxy.readQuery<AllHostiesQuery>({ query: GQL_ALL_HOSTIES })
+          if (data) {
+            // Add our comment from the mutation to the end.
+            data.allHosties.push(createHostie)
+            // Write our data back to the cache.
+            proxy.writeQuery({ query: GQL_ALL_HOSTIES, data })
+          }
+        } catch (e) {
+          /// no query exist yet
         }
       },
     }).then(x => x.data)
@@ -144,8 +155,8 @@ test('watchQuery/subscribeToMore', async t => {
           return prev
         }
 
-        console.log('prev:', JSON.stringify(prev))
-        console.log('updated data:', data)
+        log.silly('SmokeTesting', 'watchQuery/subscribeToMore prev: %s', JSON.stringify(prev))
+        log.silly('SmokeTesting', 'watchQuery/subscribeToMore updated data: %s', JSON.stringify(data))
 
         let result
         const node = data.Hostie.node
@@ -194,11 +205,22 @@ test('watchQuery/subscribeToMore', async t => {
       },
     })
 
+    const subscriptionNotifier: Function[] = []
+    let subscriptionFuture: Promise<void>
+
     let hostieList
     const hostieSubscription = hostieQuery.subscribe(
       ({ data }) => {
         hostieList = [...data.allHosties]
-        console.log('hostieList:', hostieList)
+        log.silly('SmokeTesting', 'watchQuery/subscribeToMore hostieList: %s', JSON.stringify(hostieList))
+
+        while (subscriptionNotifier.length > 0) {
+          const r = subscriptionNotifier.pop()
+          if (r) {
+            log.silly('SmokeTesting', 'resolving resolveNotifier...')
+            r()
+          }
+        }
       },
     )
 
@@ -209,6 +231,7 @@ test('watchQuery/subscribeToMore', async t => {
 
     const ownerId = (await currentUser(apollo)).id
 
+    subscriptionFuture = new Promise(r => subscriptionNotifier.push(r))
     const EXPECTED_NAME1 = 'a test hostie name'
     await apollo.mutate({
       mutation: GQL_CREATE_HOSTIE,
@@ -217,9 +240,12 @@ test('watchQuery/subscribeToMore', async t => {
         ownerId,
       },
     })
+    await subscriptionFuture
+
     t.equal(hostieList.length, 1, 'should be 1 hostie after create mutation')
     t.equal(hostieList[0].name, EXPECTED_NAME1, 'should be exactly created the hostie with EXPECTED_NAME1')
 
+    subscriptionFuture = new Promise(r => subscriptionNotifier.push(r))
     const EXPECTED_NAME2 = 'a test hostie name 2'
     const createHostieResult: CreateHostieMutation = await apollo.mutate({
       mutation: GQL_CREATE_HOSTIE,
@@ -228,12 +254,16 @@ test('watchQuery/subscribeToMore', async t => {
         ownerId,
       },
     }).then(x => x.data)
+    await subscriptionFuture
+
     const createdHostie = createHostieResult.createHostie
+
     t.equal(hostieList.length, 2, 'should be 2 hostie after another create mutation')
     t.equal(hostieList[0].name, EXPECTED_NAME1, 'should be name1 not changed')
     t.equal(hostieList[1].id,   createdHostie && createdHostie.id, 'should match the id of new created hostie')
     t.equal(hostieList[1].name, EXPECTED_NAME2, 'should be exactly created the hostie with EXPECTED_NAME2')
 
+    subscriptionFuture = new Promise(r => subscriptionNotifier.push(r))
     const EXPECTED_NAME3 = 'a test hostie updated name'
     await apollo.mutate({
       mutation: GQL_UPDATE_HOSTIE,
@@ -243,24 +273,32 @@ test('watchQuery/subscribeToMore', async t => {
         ownerId,
       },
     })
+    await subscriptionFuture
+
     t.equal(hostieList.length, 2, 'should be 2 hostie after another create mutation')
     t.equal(hostieList[0].name, EXPECTED_NAME1, 'should be name1 not changed')
     t.equal(hostieList[1].id,   createdHostie && createdHostie.id, 'should match the id of the updated hostie')
     t.equal(hostieList[1].name, EXPECTED_NAME3, 'should be updated with EXPECTED_NAME3')
 
+    subscriptionFuture = new Promise(r => subscriptionNotifier.push(r))
     await apollo.mutate({
       mutation: GQL_DELETE_HOSTIE,
       variables: {
         id: createdHostie && createdHostie.id,
       },
     })
+    await subscriptionFuture
+
     t.equal(hostieList.length, 1, 'should be 1 after delete a hostie')
+    subscriptionFuture = new Promise(r => subscriptionNotifier.push(r))
     await apollo.mutate({
       mutation: GQL_DELETE_HOSTIE,
       variables: {
         id: hostieList[0].id,
       },
     })
+    await subscriptionFuture
+
     t.equal(hostieList.length, 0, 'should be 0 after another deletion')
 
     hostieSubscription.unsubscribe()
