@@ -8,7 +8,7 @@
     "clean": "shx rm -fr dist/*",
     "gc:deploy:prod": "graphcool deploy -t prod",
     "gc:deploy:dry": "graphcool deploy --dry-run",
-    "gc:local:deploy": "sed -i '/dev: /d' .graphcoolrc && graphcool deploy -c local -n chatie -t dev",
+    "gc:local:deploy": "graphcool deploy -c local -n chatie -t dev",
     "gc:local:info": "graphcool info -t dev",
     "gc:local:pull": "graphcool local pull",
     "gc:local:up": "DEBUG=* graphcool local up",
@@ -22,7 +22,7 @@
     "gc:playground": "graphcool playground",
     "generate-schema": "ts-node scripts/generate-schema",
     "test:unit": "blue-tape -r ts-node/register -r source-map-support/register \"tests/**/*.spec.ts\" \"src/**/*.spec.ts\"",
-    "test": "npm run gc:local:purge && npm run gc:local:up && npm run gc:local:deploy && npm run lint && npm run test:unit"
+    "test": "npm run gc:local:purge && npm run gc:local:up && npm run gc:local:deploy && npm run generate-schema && npm run lint && npm run test:unit"
   },
   "dependencies": {
     "brolog": "^1.2.8",
