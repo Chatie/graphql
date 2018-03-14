@@ -62,3 +62,5 @@ package-lock.json
 /dist/
 /downloaded-schema.json
 /generated-schema.ts
+/t.*
+/t/

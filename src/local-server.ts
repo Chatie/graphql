@@ -20,15 +20,20 @@ export class LocalServer {
   public async reset(): Promise<void> {
     log.verbose('LocalServer', 'reset()')
 
-    const child = spawn('graphcool', [
-      'reset',
-      '-t',
-      'dev',
-    ])
-    // child.stdout.pipe(process.stdout)
-    child.stdin.write('y\n')
-    // child.stdin.end()
+    // const child = spawn('graphcool', [
+    //   'reset',
+    //   '-t',
+    //   'dev',
+    // ])
+    const child = spawn('scripts/local-reset.sh', [], {
+      shell: true,
+      // stdio: 'inherit',
+    })
+    child.stdout.pipe(process.stdout)
+    child.stderr.pipe(process.stderr)
+
     await new Promise(r => child.once('exit', r))
+    await this.up()
   }
 
   public async up(): Promise<void> {
@@ -39,6 +44,7 @@ export class LocalServer {
       'up',
     ])
     // child.stdout.pipe(process.stdout)
+    child.stderr.pipe(process.stderr)
     await new Promise(r => child.once('exit', r))
   }
 

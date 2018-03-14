@@ -2,7 +2,8 @@
   "typescript.tsdk": "./node_modules/typescript/lib"
 , "typescript.check.tscVersion": false
 , "files.exclude": {
-  "node_modules/": true
+    "dist/": true
+  , "node_modules/": true
 }
 , "alignment": {
       "operatorPadding": "right"
