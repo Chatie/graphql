@@ -212,11 +212,9 @@ test('watchQuery/subscribeToMore', async t => {
         log.silly('SmokeTesting', 'watchQuery/subscribeToMore hostieList: %s', JSON.stringify(hostieList))
 
         while (subscriptionNotifier.length > 0) {
-          const r = subscriptionNotifier.pop()
-          if (r) {
-            log.silly('SmokeTesting', 'resolving resolveNotifier...')
-            r()
-          }
+          const r = subscriptionNotifier.pop()!
+          log.silly('SmokeTesting', 'resolving resolveNotifier...')
+          r()
         }
       },
     )
