@@ -33,7 +33,6 @@ import {
 import {
   log,
 }                           from '../'
-import { DEFAULT_ECDH_CURVE } from 'tls';
 
 const currentUser = async (apollo: ApolloClient<any>) => {
   log.verbose('SmokeTesting', 'currentUser()')
