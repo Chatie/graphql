@@ -163,9 +163,9 @@ export class LocalServer {
     }
 
     const REGEX = {
-      relay:          /^Relay\s+(http:\/\/localhost:60000\/relay\/.+)$/m,
-      simple:         /^Simple\s+(http:\/\/localhost:60000\/simple\/.+)$/m,
-      subscriptions:  /^Subscriptions\s+(wss?:\/\/localhost:60000\/subscriptions\/.+)$/m,
+      relay:          /^Relay\s+(http:\/\/localhost:\d+\/relay\/.+)$/m,
+      simple:         /^Simple\s+(http:\/\/localhost:\d+\/simple\/.+)$/m,
+      subscriptions:  /^Subscriptions\s+(wss?:\/\/localhost:\d+\/subscriptions\/.+)$/m,
     }
 
     const endpoints: Endpoints = {
@@ -207,6 +207,8 @@ export class LocalServer {
     if (!this.graphcoolRootToken) {
       const child = spawn('graphcool', [
         'root-token',
+        'local',
+        '-t',
         'dev',
       ])
       // child.stdout.pipe(process.stdout)

@@ -19,7 +19,7 @@ jobs:
           command: npm run gc:local:up
       - run:
           name: Deploy to Local Cluster
-          command: npm run gc:deploy:local
+          command: npm run gc:local:deploy
       # - run:
-      #     name: Run tests
+      #     name: Run Tests
       #     command: docker run -it --network container:a77d5a5e2299 -v $PWD:/ node bash test.sh

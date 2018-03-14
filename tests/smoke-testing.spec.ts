@@ -109,7 +109,7 @@ test('subscription', async t => {
       })
       .subscribe(
         ({data}) => {
-          console.log('subscription:', JSON.stringify(data))
+          log.silly('SmokeTesting', 'subscription:', JSON.stringify(data))
           hostieSubscription.unsubscribe()
           resolve(data)
         },
@@ -132,8 +132,6 @@ test('subscription', async t => {
     // console.log('mutate end')
 
     const changes = await subscriptionFuture
-
-    console.log('subscription end')
 
     t.ok(changes.Hostie, 'should receive change subscription')
     t.equal(changes.Hostie && changes.Hostie.mutation, _ModelMutationType.CREATED, 'should receive CREATED data')
