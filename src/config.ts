@@ -26,6 +26,13 @@ export const ENDPOINTS: Endpoints = {
   // subscriptions:  'wss://subscriptions.ap-northeast-1.graph.cool/v1/cjdbw710k0zpr0129sv35o79e',
 }
 
+export const STAGING_ENDPOINTS: Endpoints = {
+  simple: 'https://api.graph.cool/simple/v1/chatie-staging',
+  system: 'https://api.graph.cool/system',
+  relay:  'https://api.graph.cool/relay/v1/chatie-staging',
+  subscriptions:  'wss://subscriptions.ap-northeast-1.graph.cool/v1/chatie-staging',
+}
+
 export {
   Endpoints,
   log,
