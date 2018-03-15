@@ -77,9 +77,10 @@
   },
   "homepage": "https://github.com/chatie/graphql#readme",
   "files": [
-    "LICENSE",
-    "README.md",
-    "dist/*",
-    "package.json"
+      "dist/*"
+    , "src/*"
+    , "LICENSE"
+    , "README.md"
+    , "package.json"
   ]
 }
