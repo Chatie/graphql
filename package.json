@@ -1,6 +1,6 @@
 {
   "name": "@chatie/graphql",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Chatie GraphQL Service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -77,10 +77,10 @@
   },
   "homepage": "https://github.com/chatie/graphql#readme",
   "files": [
-      "dist/*"
-    , "src/*"
-    , "LICENSE"
-    , "README.md"
-    , "package.json"
+    "dist/*",
+    "src/*",
+    "LICENSE",
+    "README.md",
+    "package.json"
   ]
 }
