@@ -2,25 +2,18 @@ import * as fs    from 'fs'
 import * as path  from 'path'
 
 import {
-  InMemoryCache,
+  ApolloClient,
+  getApolloClient,
   NormalizedCacheObject,
-}                             from 'apollo-cache-inmemory'
-import { ApolloClient }       from 'apollo-client'
-import { BatchHttpLink }      from 'apollo-link-batch-http'
-import { WebSocketLink }      from 'apollo-link-ws'
-import {
-  ApolloLink,
-  Operation,
-}                             from 'apollo-link'
-import { getMainDefinition }  from 'apollo-utilities'
-import { SubscriptionClient } from 'subscriptions-transport-ws'
-
-import fetch          from 'node-fetch'
-import * as WebSocket from 'ws'
-
-import { LocalServer }      from '../../'
+}                           from '../../src/apollo'
+import { LocalServer }      from '../../src/local-server'
 
 const FIXTURE_GRAPHCOOL_INFO_FILE = path.join(__dirname, 'graphcool-info.txt')
+
+// export {
+//   getApolloClient,
+//   NormalizedCacheObject,
+// }
 
 export async function* apolloFixture() {
   const localServer     = new LocalServer()
@@ -49,10 +42,9 @@ export async function* apolloFixture() {
 
   GC_USER.token = await localServer.generateUserToken(GC_USER.id)
 
-  const apollo = await getApolloClient(
-    localEndpoints.simple,
-    localEndpoints.subscriptions,
+  const apollo: ApolloClient<NormalizedCacheObject> = await getApolloClient(
     GC_USER.token,
+    localEndpoints,
   )
 
   apollo['USER_FIXTURE'] = GC_USER
@@ -62,7 +54,6 @@ export async function* apolloFixture() {
   await localServer.deleteAll('Hostie')
 
   await apollo.resetStore()
-  // await wsClient.close()
   apollo['wsClose']()
 }
 
@@ -80,74 +71,3 @@ export function* graphcoolInfoFixture() {
   }
 
 }
-
-async function getApolloClient(
-  simple:         string,
-  subscriptions:  string,
-  token:          string,
-) {
-  const wsClient = new SubscriptionClient(
-    subscriptions,
-    {
-      reconnect: true,
-      timeout: 30000,
-      /**
-       * not accessToken ???
-       * See: https://github.com/apollographql/apollo-client/blob/master/docs/source/features/subscriptions.md#authentication-over-websocket
-       */
-      connectionParams: {
-        authToken: token,
-      },
-      // connectionCallback: (error, result) => {
-      //   console.log('connection callback:', error, result)
-      //   console.log('status:', wsClient.status)
-      // },
-    },
-    WebSocket,
-  )
-
-  const connectedFuture = new Promise(resolve => {
-    wsClient.onConnected(resolve)
-    wsClient.onReconnected(resolve)
-  })
-
-  // wsClient.onConnected(e => console.log('!!!on connected:', e))
-  // wsClient.onConnecting(() => console.log('on connecting'))
-  // wsClient.onDisconnected(e => {
-  //   console.log('on disconnected:', e)
-  // })
-  // wsClient.onReconnected(e => console.log('on re-connected:', e))
-  // wsClient.onReconnecting(e => console.log('on re-connecting:', e))
-
-  const wsLink = new WebSocketLink(wsClient)
-  const httpLink = new BatchHttpLink({
-    uri: simple,
-    fetch,
-    headers: {
-      authorization: `bearer ${token}`,
-    },
-  })
-
-  const hasSubscriptionOperation = (op: Operation) => {
-    const { kind, operation } = getMainDefinition(op.query)
-    return kind === 'OperationDefinition' && operation === 'subscription'
-  }
-
-  const link = ApolloLink.split(
-    hasSubscriptionOperation,
-    wsLink,
-    httpLink,
-  )
-  const cache   = new InMemoryCache()
-  const apollo  = new ApolloClient({
-    link,
-    cache,
-  })
-
-  await connectedFuture
-
-  apollo['wsClose'] = () => wsClient.close()
-  return apollo
-}
-
-export { NormalizedCacheObject }

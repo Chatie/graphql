@@ -11,7 +11,7 @@
     "gc:local:deploy": "graphcool deploy -c local -n chatie -t dev",
     "gc:local:info": "graphcool info -t dev",
     "gc:local:pull": "graphcool local pull",
-    "gc:local:up": "DEBUG=* graphcool local up",
+    "gc:local:up": "graphcool local up",
     "gc:local:stop": "graphcool local stop",
     "gc:local:reset": "echo 'not work' || echo y | graphcool reset -t dev",
     "gc:local:purge": "./scripts/local-purge.sh",

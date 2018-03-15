@@ -43,6 +43,7 @@ const currentUser = async (apollo: ApolloClient<any>) => {
   if (!user) {
     throw new Error('cant get current user!')
   }
+  log.silly('SmokeTesting', 'currentUser() = %s', user.id)
   return user
 }
 
@@ -109,19 +110,19 @@ test('subscription', async t => {
       })
       .subscribe(
         ({data}) => {
-          log.silly('SmokeTesting', 'subscription:', JSON.stringify(data))
+          log.silly('SmokeTesting', 'subscription: %s', JSON.stringify(data))
           hostieSubscription.unsubscribe()
           resolve(data)
         },
         reject,
       )
-      // console.log('subscribe-ed')
+      log.silly('SmokeTesting', 'subscribe: subscribe-ed')
     })
 
     const name    = cuid()
     const ownerId = (await currentUser(apollo)).id
 
-    // console.log('mutate begin')
+    console.log('mutate begin')
     await apollo.mutate<CreateHostieMutation>({
       mutation: GQL_CREATE_HOSTIE,
       variables: {
@@ -129,9 +130,9 @@ test('subscription', async t => {
         ownerId,
       },
     })
-    // console.log('mutate end')
-
+    console.log('mutate end')
     const changes = await subscriptionFuture
+    console.log('future done')
 
     t.ok(changes.Hostie, 'should receive change subscription')
     t.equal(changes.Hostie && changes.Hostie.mutation, _ModelMutationType.CREATED, 'should receive CREATED data')

@@ -1,4 +1,5 @@
-import { Brolog }   from 'brolog'
+import { log }   from 'brolog'
+log.level(process.env['BROLOG_LEVEL'] as any)
 
 import { Endpoints } from 'graphcool-lib/dist/src/types'
 
@@ -25,9 +26,7 @@ export const ENDPOINTS: Endpoints = {
   // subscriptions:  'wss://subscriptions.ap-northeast-1.graph.cool/v1/cjdbw710k0zpr0129sv35o79e',
 }
 
-export const log = new Brolog()
-log.level(process.env['BROLOG_LEVEL'] as any)
-
 export {
   Endpoints,
+  log,
 }
