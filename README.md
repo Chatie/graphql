@@ -1,4 +1,6 @@
 # GRAPHQL
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/Chatie/graphql.svg)](https://greenkeeper.io/)
 WIP: Chatie GraphQL Schema &amp; Settings
 
 Graph Backend as a Service - GraphCool: https://graph.cool
