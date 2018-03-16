@@ -26,6 +26,11 @@ export async function getApolloClient(
   token:      string,
   endpoints:  Endpoints = ENDPOINTS,
 ) {
+  // let wsConnectionCallback: Function[] = []
+  // const wsConnectionFuture = new Promise((resolve, reject) => {
+  //   wsConnectionCallback = [resolve, reject]
+  // })
+
   const wsClient = new SubscriptionClient(
     endpoints.subscriptions,
     {
@@ -39,6 +44,11 @@ export async function getApolloClient(
         authToken: token,
       },
       // connectionCallback: (error, result) => {
+      //   if (error) {
+      //     wsConnectionCallback[1](error)
+      //   } else {
+      //     wsConnectionCallback[0](result)
+      //   }
       //   console.log('connection callback:', error, result)
       //   console.log('status:', wsClient.status)
       // },

@@ -10,11 +10,12 @@
     "gc:deploy:dry": "graphcool deploy --dry-run",
     "gc:local:deploy": "graphcool deploy -c local -n chatie -t dev",
     "gc:local:info": "graphcool info -t dev",
+    "gc:local:prepare": "npm run gc:local:up && npm run gc:local:deploy && npm run generate-schema",
     "gc:local:pull": "graphcool local pull",
-    "gc:local:up": "graphcool local up",
-    "gc:local:stop": "graphcool local stop",
-    "gc:local:reset": "echo 'not work' || echo y | graphcool reset -t dev",
     "gc:local:purge": "./scripts/local-purge.sh",
+    "gc:local:reset": "echo 'not work' || echo y | graphcool reset -t dev",
+    "gc:local:stop": "graphcool local stop",
+    "gc:local:up": "graphcool local up",
     "gc:login": "graphcool login",
     "dist": "npm run clean && tsc",
     "lint": "npm run lint:ts",
@@ -22,8 +23,8 @@
     "gc:playground": "graphcool playground",
     "generate-schema": "npm run gc:local:up && ts-node scripts/generate-schema",
     "test:pack": "npm run generate-schema && npm run dist && export TMPDIR=/tmp/pack-testing.$$ && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/pack-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && (for i in {1..3}; do node pack-testing.js && break || sleep 1; done)",
-    "test:unit": "blue-tape -r ts-node/register -r source-map-support/register \"tests/**/*.spec.ts\" \"src/**/*.spec.ts\"",
-    "test": "npm run clean && npm run gc:local:up && npm run gc:local:deploy && npm run generate-schema && npm run lint && npm run test:unit"
+    "test:unit": "BROLOG_LEVEL=silly blue-tape -r ts-node/register -r source-map-support/register \"tests/**/*.spec.ts\" \"src/**/*.spec.ts\"",
+    "test": "npm run clean && npm run gc:local:prepare && npm run lint && npm run test:unit"
   },
   "dependencies": {
     "apollo-cache-inmemory": "^1.1.11",
