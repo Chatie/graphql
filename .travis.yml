@@ -25,11 +25,7 @@ jobs:
         - node --version
         - npm --version
         - graphcool --version
-        # - npm test
-        - ./scripts/local-purge.sh
-        - graphcool local up
-        - cat .graphcoolrc
-        - graphcool deploy -t dev
+        - npm test
 
     - stage: pack
       script:

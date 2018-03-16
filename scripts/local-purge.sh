@@ -14,4 +14,6 @@ echo "Removing all generated schemas..."
 rm -fv downloaded-schema.json generated-schema.ts
 echo done.
 
+echo "Removing local/dev setting in .graphcoolrc..."
 sed -i'.bak' '/dev: /d' .graphcoolrc
+echo done.
