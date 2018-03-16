@@ -1,6 +1,6 @@
 {
   "name": "@chatie/graphql",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "description": "Chatie GraphQL Service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
