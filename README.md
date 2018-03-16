@@ -1,5 +1,6 @@
 # GRAPHQL
 
+[![Build Status](https://travis-ci.org/Chatie/graphql.svg?branch=master)](https://travis-ci.org/Chatie/graphql)
 [![Greenkeeper badge](https://badges.greenkeeper.io/Chatie/graphql.svg)](https://greenkeeper.io/)
 
 Chatie GraphQL Schema &amp; Settings
