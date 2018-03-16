@@ -9,14 +9,14 @@ cd "$DIR"
 
 echo "Working dir: $DIR"
 
+echo "Removing local/dev setting in .graphcoolrc..."
+sed -i'.bak' '/dev: /d' .graphcoolrc
+echo done.
+
 echo 'graphcool local up...'
 graphcool local up
 echo 'done.'
 
 echo 'graphcool deploy...'
 graphcool deploy -c local -n chatie -t dev
-echo 'done.'
-
-echo 'generate-schema...'
-ts-node scripts/generate-schema
 echo 'done.'

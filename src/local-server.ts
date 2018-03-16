@@ -1,3 +1,4 @@
+import * as path  from 'path'
 import { spawn }  from 'child_process'
 
 import Graphcool  from 'graphcool-lib'
@@ -17,32 +18,29 @@ export class LocalServer {
   private graphcoolRootToken: string
   private graphcoolLib:       Graphcool
 
+  private homeDir: string
+
   constructor() {
     log.verbose('LocalServer', 'constructor()')
-    //
+    this.homeDir = path.join(__dirname, '..')
   }
 
+  /**
+   * @deprecated not work. see issue #3
+   */
   public async reset(): Promise<void> {
     log.warn('LocalServer', 'reset() WIP...')
 
     /**
      * method 1: not support local docker
      */
-    // const child = spawn('graphcool', [
-    //   'reset',
-    //   '-t',
-    //   'dev',
-    // ])
-
-    /**
-     * method 2
-     */
-    const child = spawn('scripts/local-reset.sh', [], {
-      shell: true,
-      // stdio: 'inherit',
+    const child = spawn('graphcool', [
+      'reset',
+      '-t',
+      'dev',
+    ], {
+      cwd: this.homeDir,
     })
-    child.stdout.pipe(process.stdout)
-    child.stderr.pipe(process.stderr)
 
     await new Promise(r => child.once('exit', r))
     await this.up()
@@ -145,7 +143,9 @@ export class LocalServer {
     const child = spawn('graphcool', [
       'local',
       'up',
-    ])
+    ], {
+      cwd: this.homeDir,
+    })
     // child.stdout.pipe(process.stdout)
     child.stderr.pipe(process.stderr)
     await new Promise(r => child.once('exit', r))
@@ -162,7 +162,9 @@ export class LocalServer {
       'info',
       '-t',
       'dev',
-    ])
+    ], {
+      cwd: this.homeDir,
+    })
     // child.stdout.pipe(process.stdout)
     const output = await new Promise<string>((resolve, reject) => {
       let buffer = ''
@@ -236,7 +238,9 @@ export class LocalServer {
         'local',
         '-t',
         'dev',
-      ])
+      ], {
+        cwd: this.homeDir,
+      })
       // child.stdout.pipe(process.stdout)
       const output = await new Promise<string>((resolve, reject) => {
         let buffer = ''

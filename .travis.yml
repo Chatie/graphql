@@ -29,7 +29,11 @@ jobs:
 
     - stage: pack
       script:
-        - npm run test:pack && echo 'Npm pack testing is passed.'
+        - echo "NPM Pack Testing..."
+        - npm run gc:local:bootstrap
+        - npm run generate-schema
+        - npm run test:pack
+        - echo 'NPM Pack Testing is PASSED.'
 
     - stage: deploy
       script:
