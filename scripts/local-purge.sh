@@ -7,7 +7,6 @@ if [ ! -z "$containers" ]; then
   docker stop $containers
   docker rm $containers
   docker volume rm $(docker volume ls -q -f dangling=true -f name=local_)
-  sed -i'.bak' '/dev: /d' .graphcoolrc
 fi
 echo done.
 
@@ -15,5 +14,4 @@ echo "Removing all generated schemas..."
 rm -fv downloaded-schema.json generated-schema.ts
 echo done.
 
-echo "catting .graphcoolrc"
-cat .graphcoolrc
+sed -i'.bak' '/dev: /d' .graphcoolrc
