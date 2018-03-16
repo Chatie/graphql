@@ -23,6 +23,7 @@ npm test
 1. [An introduction to Graphcool framework](https://hackernoon.com/graphcool-framework-analysis-and-its-use-case-319173a9aea4)
 1. [GraphQL Schema Language Cheat Sheet](https://github.com/sogko/graphql-schema-language-cheat-sheet)
 1. [watchQuery + Subscriptions](https://alligator.io/angular/graphql-subscriptions/)
+1. [Introducing GraphQL Subscriptions](https://blog.graph.cool/introducing-graphql-subscriptions-86183029029a)
 
 ## Background Knoweledge
 
