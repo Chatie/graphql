@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import {
+const {
   ENDPOINTS,
   VERSION,
   getApolloClient,
-}                   from '@chatie/graphql'
+}                   = require('@chatie/graphql')
 // }                   from '../../'
 
 async function main() {
