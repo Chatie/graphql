@@ -1,6 +1,7 @@
 export {
   ApolloClient,
   NormalizedCacheObject,
+  ObservableQuery,
   getApolloClient,
 }                         from './src/apollo'
 export {

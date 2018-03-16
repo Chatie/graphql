@@ -2,7 +2,10 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 }                             from 'apollo-cache-inmemory'
-import { ApolloClient }       from 'apollo-client'
+import {
+  ApolloClient,
+  ObservableQuery,
+}                             from 'apollo-client'
 import { BatchHttpLink }      from 'apollo-link-batch-http'
 import { WebSocketLink }      from 'apollo-link-ws'
 import {
@@ -89,5 +92,6 @@ export async function getApolloClient(
 
 export {
   ApolloClient,
+  ObservableQuery,
   NormalizedCacheObject,
 }
