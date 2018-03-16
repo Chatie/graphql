@@ -102,6 +102,9 @@ test('mutation/create', async t => {
 
 test('subscription', async t => {
   for await (const apollo of apolloFixture()) {
+    const name    = cuid()
+    const ownerId = (await currentUser(apollo)).id
+
     const subscriptionFuture = new Promise<SubscribeHostieSubscription>((resolve, reject) => {
       // console.log('inside subscription promise')
       const hostieSubscription = apollo
@@ -118,9 +121,6 @@ test('subscription', async t => {
       )
       log.silly('SmokeTesting', 'subscribe: subscribe-ed')
     })
-
-    const name    = cuid()
-    const ownerId = (await currentUser(apollo)).id
 
     console.log('mutate begin')
     await apollo.mutate<CreateHostieMutation>({

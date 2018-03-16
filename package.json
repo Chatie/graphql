@@ -5,10 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "clean": "shx rm -fr dist/*",
+    "clean": "shx rm -fr dist/* && npm run gc:local:purge",
     "gc:deploy:prod": "graphcool deploy -t prod",
     "gc:deploy:dry": "graphcool deploy --dry-run",
-    "gc:local:deploy": "DEBUG=* graphcool deploy -c local -n chatie -t dev",
+    "gc:local:deploy": "graphcool deploy -c local -n chatie -t dev",
     "gc:local:info": "graphcool info -t dev",
     "gc:local:pull": "graphcool local pull",
     "gc:local:up": "graphcool local up",
@@ -23,7 +23,7 @@
     "generate-schema": "ts-node scripts/generate-schema",
     "test:pack": "npm run dist && export TMPDIR=/tmp/pack-testing.$$ && npm pack && mkdir $TMPDIR && mv *-*.*.*.tgz $TMPDIR && cp tests/fixtures/pack-testing.js $TMPDIR && cd $TMPDIR && npm init -y && npm i *-*.*.*.tgz && (for i in {1..3}; do node pack-testing.js && break || sleep 1; done)",
     "test:unit": "blue-tape -r ts-node/register -r source-map-support/register \"tests/**/*.spec.ts\" \"src/**/*.spec.ts\"",
-    "test": "npm run gc:local:purge && npm run gc:local:up && npm run gc:local:deploy && npm run generate-schema && npm run lint && npm run test:unit"
+    "test": "npm run clean && npm run gc:local:up && npm run gc:local:deploy && npm run generate-schema && npm run lint && npm run test:unit"
   },
   "dependencies": {
     "apollo-cache-inmemory": "^1.1.11",
