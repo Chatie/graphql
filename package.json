@@ -80,6 +80,7 @@
   "homepage": "https://github.com/chatie/graphql#readme",
   "files": [
     "dist/*",
+    "scripts/*",
     "src/*",
     "LICENSE",
     "README.md",
