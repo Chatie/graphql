@@ -9,7 +9,7 @@ const {
 
 async function main() {
   const apollo = await getApolloClient('', ENDPOINTS)
-  console.log(`PackTesting v${VERSION} passed.`)
+  console.log(`Pack Testing v${VERSION} PASSED.`)
   return 0
 }
 
