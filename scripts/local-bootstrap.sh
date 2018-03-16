@@ -9,10 +9,6 @@ cd "$DIR"
 
 echo "Working dir: $DIR"
 
-echo "Removing local/dev setting in .graphcoolrc..."
-sed -i'.bak' '/dev: /d' .graphcoolrc
-echo done.
-
 echo 'graphcool local up...'
 graphcool local up
 echo 'done.'

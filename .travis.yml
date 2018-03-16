@@ -30,6 +30,7 @@ jobs:
     - stage: pack
       script:
         - echo "NPM Pack Testing..."
+        - npm run gc:local:destroy
         - npm run gc:local:bootstrap
         - npm run generate-schema
         - npm run test:pack
@@ -39,6 +40,7 @@ jobs:
       script:
         - echo "Deploying to NPM ..."
         - npm version
+        - npm run gc:local:destroy
         - npm run gc:local:bootstrap
         - npm run generate-schema
         - npm run dist
