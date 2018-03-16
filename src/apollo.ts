@@ -20,12 +20,17 @@ import * as WebSocket from 'ws'
 import {
   ENDPOINTS,
   Endpoints,
+  log,
 }                     from './config'
 
 export async function getApolloClient(
   token:      string,
   endpoints:  Endpoints = ENDPOINTS,
 ) {
+  log.verbose('Apollo', 'getApolloClient(token=%s, endpoints=%s)',
+                        token,
+                        JSON.stringify(endpoints),
+              )
   // let wsConnectionCallback: Function[] = []
   // const wsConnectionFuture = new Promise((resolve, reject) => {
   //   wsConnectionCallback = [resolve, reject]
@@ -95,6 +100,7 @@ export async function getApolloClient(
   })
 
   await connectedFuture
+  log.silly('Apollo', 'getApolloClient() connected')
 
   apollo['wsClose'] = () => wsClient.close()
   return apollo
