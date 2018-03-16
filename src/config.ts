@@ -1,3 +1,5 @@
+import * as readPkgUp from 'read-pkg-up'
+
 import { log }   from 'brolog'
 log.level(process.env['BROLOG_LEVEL'] as any)
 
@@ -32,6 +34,9 @@ export const STAGING_ENDPOINTS: Endpoints = {
   relay:  'https://api.graph.cool/relay/v1/chatie-staging',
   subscriptions:  'wss://subscriptions.ap-northeast-1.graph.cool/v1/chatie-staging',
 }
+
+const pkg = readPkgUp.sync({ cwd: __dirname }).pkg
+export const VERSION = pkg.version
 
 export {
   Endpoints,
