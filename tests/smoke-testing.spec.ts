@@ -120,6 +120,8 @@ test('subscription', async t => {
       log.silly('SmokeTesting', 'subscribe: subscribe-ed')
     })
 
+    // wait the subscription to ready...
+    // or we might miss the following mutation event.
     await new Promise(r => setTimeout(r, 1))
 
     const name    = cuid()
