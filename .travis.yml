@@ -25,6 +25,9 @@ jobs:
         - node --version
         - npm --version
         - graphcool --version
+        - npm run gc:local:destroy
+        - npm run gc:local:bootstrap
+        - npm run generate-schema
         - npm test
 
     - stage: pack
