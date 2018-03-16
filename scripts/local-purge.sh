@@ -14,3 +14,6 @@ echo done.
 echo "Removing all generated schemas..."
 rm -fv downloaded-schema.json generated-schema.ts
 echo done.
+
+echo "catting .graphcoolrc"
+cat .graphcoolrc

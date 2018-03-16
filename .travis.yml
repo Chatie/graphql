@@ -24,7 +24,12 @@ jobs:
         - echo $TRAVIS_OS_NAME
         - node --version
         - npm --version
-        - npm test
+        - graphcool --version
+        # - npm test
+        - ./scripts/local-purge.sh
+        - graphcool local up
+        - cat .graphcoolrc
+        - graphcool deploy -t dev
 
     - stage: pack
       script:
