@@ -35,6 +35,8 @@ jobs:
       script:
         - echo "Deploying to NPM ..."
         - npm version
+        - npm run gc:local:bootstrap
+        - npm run generate-schema
         - npm run dist
 
       deploy:
