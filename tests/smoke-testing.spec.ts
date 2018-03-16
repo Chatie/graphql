@@ -9,6 +9,8 @@ import * as test from 'blue-tape'
 import { ApolloClient } from 'apollo-client'
 import * as cuid        from 'cuid'
 
+import { LocalServer }  from '../src/local-server'
+
 import {
   _ModelMutationType,
   AllHostiesQuery,
@@ -27,12 +29,10 @@ import {
 }                           from './smoke-testing.graphql'
 
 import {
-  apolloFixture,
-}                           from './fixtures/'
-
-import {
   log,
 }                           from '../'
+
+const localServer = new LocalServer()
 
 const currentUser = async (apollo: ApolloClient<any>) => {
   log.verbose('SmokeTesting', 'currentUser()')
@@ -48,7 +48,7 @@ const currentUser = async (apollo: ApolloClient<any>) => {
 }
 
 test('query', async t => {
-  for await (const apollo of apolloFixture()) {
+  for await (const {apollo} of localServer.fixtures()) {
     const allHosties = await apollo.query<AllHostiesQuery>({
       query: GQL_ALL_HOSTIES,
     }).then(x => x.data.allHosties)
@@ -58,7 +58,7 @@ test('query', async t => {
 })
 
 test.skip('current user', async t => {
-  for await (const apollo of apolloFixture()) {
+  for await (const {apollo} of localServer.fixtures()) {
     const user = await currentUser(apollo)
     t.ok(user, 'query should get current user')
     t.equal(user.email, 'zixia@zixia.net', 'query should get current user email')
@@ -66,7 +66,7 @@ test.skip('current user', async t => {
 })
 
 test('mutation/create', async t => {
-  for await (const apollo of apolloFixture()) {
+  for await (const {apollo} of localServer.fixtures()) {
     const user = await currentUser(apollo)
 
     const name    = cuid()
@@ -101,7 +101,7 @@ test('mutation/create', async t => {
 })
 
 test('subscription', async t => {
-  for await (const apollo of apolloFixture()) {
+  for await (const {apollo} of localServer.fixtures()) {
     const subscriptionFuture = new Promise<SubscribeHostieSubscription>((resolve, reject) => {
       // console.log('inside subscription promise')
       const hostieSubscription = apollo
@@ -122,12 +122,13 @@ test('subscription', async t => {
 
     // wait the subscription to ready...
     // or we might miss the following mutation event.
-    await new Promise(r => setTimeout(r, 1))
+    // await new Promise(r => setTimeout(r, 1))
+    await new Promise(r => setImmediate(r))
 
     const name    = cuid()
     const ownerId = (await currentUser(apollo)).id
 
-    console.log('mutate begin')
+    // console.log('mutate begin')
     await apollo.mutate<CreateHostieMutation>({
       mutation: GQL_CREATE_HOSTIE,
       variables: {
@@ -135,17 +136,17 @@ test('subscription', async t => {
         ownerId,
       },
     })
-    console.log('mutate end')
+    // console.log('mutate end')
     const changes = await subscriptionFuture
-    console.log('future done')
+    // console.log('future done')
 
     t.ok(changes.Hostie, 'should receive change subscription')
-    t.equal(changes.Hostie && changes.Hostie.mutation, _ModelMutationType.CREATED, 'should receive CREATED data')
+    t.equal(changes.Hostie!.mutation, _ModelMutationType.CREATED, 'should receive CREATED data')
   }
 })
 
 test('watchQuery/subscribeToMore', async t => {
-  for await (const apollo of apolloFixture()) {
+  for await (const {apollo} of localServer.fixtures()) {
     const hostieQuery = apollo.watchQuery<AllHostiesQuery>({
       query: GQL_ALL_HOSTIES,
     })

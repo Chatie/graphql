@@ -1,7 +1,8 @@
 #!/usr/bin/env ts-node
 import * as test from 'blue-tape'
 
-import { LocalServer } from './local-server'
+import { log }          from './config'
+import { LocalServer }  from './local-server'
 
 import {
   graphcoolInfoFixture,
@@ -130,4 +131,22 @@ test('createHostie()', async t => {
   )
   t.ok(hostie, 'should created a hostie')
   t.ok(hostie.id, 'should created a hostie with id')
+})
+
+test('fixtures()', async t => {
+  log.verbose('LocalServerSpec', 'fixtures()')
+
+  const localServer = new LocalServer()
+
+  let counter = 0
+  for await (const fixtures of localServer.fixtures()) {
+    counter++
+    t.ok(fixtures, 'should get a fixture')
+    t.ok(fixtures.ENDPOINTS, 'should get fixtures.ENDPOINTS')
+    t.ok(fixtures.ROOT.token, 'should get fixtures.ROOT')
+    t.ok(fixtures.USER.email, 'should get fixtures.USER')
+    t.ok(fixtures.apollo, 'should get fixtures.apollo')
+  }
+
+  t.ok(counter > 0, 'should get one or more fixtures')
 })

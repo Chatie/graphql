@@ -5,7 +5,12 @@ import Graphcool  from 'graphcool-lib'
 import {
   Endpoints,
   log,
-}             from './config'
+}                         from './config'
+import {
+  ApolloClient,
+  NormalizedCacheObject,
+  getApolloClient,
+}                         from './apollo'
 
 export class LocalServer {
   private graphcoolInfo:      string
@@ -71,36 +76,57 @@ export class LocalServer {
     return hostie
   }
 
-  public async deleteAll(model: string): Promise<number> {
-    /**
-     * method 3
-     */
+  public async deleteAll(model: string|boolean): Promise<number> {
+    log.verbose('LocalServer', 'deleteAll(model=%s)', model)
+
+    if (typeof model === 'boolean') {
+      // delete the list should in order...
+      const MODEL_LIST = [
+        'Giftie',
+        'Botie',
+        'Hostie',
+        // keep User the latest
+        'User',
+      ]
+
+      let counter = 0
+      // delete all entries in the model in order
+      for (const modelName of MODEL_LIST) {
+        counter += await this.deleteAll(modelName)
+      }
+
+      return counter
+    }
+
     const lib = await this.graphcool()
     const api = lib.api('simple/v1')
 
-    const queryAllHosties = `
-      query AllHosties {
-        allHosties {
+    const allItems    = `all${model}s`
+    const deleteItem  = `delete${model}`
+
+    const queryAllItems = `
+      query AllItems {
+        ${allItems} {
           id
         }
       }
     `
     const result = await api.request<{
-      allHosties: [{ id: string }],
-    }>(queryAllHosties)
+      [key: string]: [{ id: string }],
+    }>(queryAllItems)
 
-    const num = result.allHosties.length
-    log.silly('LocalServer', 'deleteAll() get %d hosties', num)
+    const num = result[allItems].length
+    log.silly('LocalServer', 'deleteAll() get %d items for %s', num, model)
 
     const futureList: any[] = []
 
-    for (const hostie of result.allHosties) {
-      const id = hostie.id
+    for (const item of result[allItems]) {
+      const id = item.id
       const future = api.request<{
-        deleteHostie: { id: string },
+        [key: string]: { id: string },
       }>(`
-        mutation {
-          deleteHostie(id: "${id}") {
+        mutation DeleteItem {
+          ${deleteItem}(id: "${id}") {
             id
           }
         }
@@ -108,7 +134,7 @@ export class LocalServer {
       futureList.push(future)
     }
     await Promise.all(futureList)
-    log.silly('LocalServer', 'deleteAll() deleted all hosties')
+    log.silly('LocalServer', 'deleteAll() deleted all items for %s', model)
 
     return num
   }
@@ -300,4 +326,49 @@ export class LocalServer {
     log.silly('LocalServer', 'createUser() = %s', result.createUser.id)
     return result.createUser.id
   }
+
+  public async* fixtures() {
+    const randomId = Math.random()
+                          .toString()
+                          .substr(2, 7)
+
+    const USER = {
+      email:    `email-${randomId}@email.com`,
+      nickname: `nickname-${randomId}`,
+      name:     `name-${randomId}`,
+      id:       '',
+      token:    '',
+    }
+
+    await this.deleteAll(true)
+
+    USER.id = await this.createUser(
+      USER.email,
+      USER.nickname,
+      USER.name,
+    )
+
+    USER.token = await this.generateUserToken(USER.id)
+    const ENDPOINTS = await this.endpoints()
+    const apollo: ApolloClient<NormalizedCacheObject> = await getApolloClient(
+      USER.token,
+      ENDPOINTS,
+    )
+
+    const ROOT = {
+      token: await this.rootToken(),
+    }
+    yield {
+      ENDPOINTS,
+      ROOT,
+      USER,
+      apollo,
+    }
+
+    await this.deleteAll(true)
+
+    await apollo.resetStore()
+    apollo['wsClose']()
+  }
+
 }
