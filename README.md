@@ -4,9 +4,9 @@
 [![Build Status](https://travis-ci.org/Chatie/graphql.svg?branch=master)](https://travis-ci.org/Chatie/graphql)
 [![Greenkeeper badge](https://badges.greenkeeper.io/Chatie/graphql.svg)](https://greenkeeper.io/)
 
-Chatie GraphQL Schema &amp; Settings
+Chatie GraphQL Schema & Settings & Development Fixtures
 
-Graph Backend as a Service - GraphCool: https://graph.cool
+> `@chatie/graphql` is a system module for https://www.chatie.io
 
 ## Develop
 
@@ -17,11 +17,40 @@ npm run gc:deploy
 npm run gc:playground
 ```
 
+## Deploy Development Server
+
+### 1. Start a local server
+
+```shell
+$ npm gc:local:start
+# or
+$ chatie-graphql-local-start
+```
+
+### 2. Stop the local server
+
+```shell
+$ npm gc:local:stop
+# or
+$ chatie-graphql-local-stop
+```
+
 ## Test
 
 ```shell
 npm test
 ```
+
+# GRAPHQL SCHEMA
+
+1. See: `/graphcool.yml`
+1. See: `/types/*.graphql`
+
+# API
+
+## `LocalServer` Class
+
+Provide local server managing tools, unit testing helper functions and fixtures.
 
 # RESOURCES
 
@@ -51,6 +80,12 @@ npm test
 ## NPM Scoped Module
 
 * [publishing scoped module](https://github.com/npm/npm/issues/12194#issuecomment-279226735)
+
+# SERVERLESS GRAPHQL
+
+`@chatie/graphql` is using the Graph.Cool service.
+
+Learn more about Graph Backend as a Service: GraphCool - https://graph.cool
 
 # AUTHOR
 

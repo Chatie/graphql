@@ -1,7 +1,6 @@
-import * as path  from 'path'
 import { spawn }  from 'child_process'
 
-import Graphcool  from 'graphcool-lib'
+import Graphcool    from 'graphcool-lib'
 
 import {
   Endpoints,
@@ -18,11 +17,8 @@ export class LocalServer {
   private graphcoolRootToken: string
   private graphcoolLib:       Graphcool
 
-  private homeDir: string
-
   constructor() {
-    log.verbose('LocalServer', 'constructor()')
-    this.homeDir = path.join(__dirname, '..')
+    log.verbose('LocalServer', 'constructor() __dirname=%s', __dirname)
   }
 
   /**
@@ -39,7 +35,7 @@ export class LocalServer {
       '-t',
       'dev',
     ], {
-      cwd: this.homeDir,
+      cwd: __dirname,
     })
 
     await new Promise(r => child.once('exit', r))
@@ -144,7 +140,7 @@ export class LocalServer {
       'local',
       'up',
     ], {
-      cwd: this.homeDir,
+      cwd: __dirname,
     })
     // child.stdout.pipe(process.stdout)
     child.stderr.pipe(process.stderr)
@@ -163,7 +159,7 @@ export class LocalServer {
       '-t',
       'dev',
     ], {
-      cwd: this.homeDir,
+      cwd: __dirname,
     })
     // child.stdout.pipe(process.stdout)
     const output = await new Promise<string>((resolve, reject) => {
@@ -179,7 +175,11 @@ export class LocalServer {
     })
     await new Promise(r => child.once('exit', r))
 
+    if (!output) {
+      throw new Error('info() got nothing!')
+    }
     this.graphcoolInfo = output
+    log.silly('LocalServer', 'info()=%s', output)
     return output
   }
 
@@ -239,7 +239,7 @@ export class LocalServer {
         '-t',
         'dev',
       ], {
-        cwd: this.homeDir,
+        cwd: __dirname,
       })
       // child.stdout.pipe(process.stdout)
       const output = await new Promise<string>((resolve, reject) => {
