@@ -1,6 +1,6 @@
 # GRAPHQL
 
-[![npm version](https://badge.fury.io/js/%40chatie%2Fgraphql.svg)](https://badge.fury.io/js/%40chatie%2Fgraphql)
+[![npm version](https://badge.fury.io/js/%40chatie%2Fgraphql.svg)](https://www.npmjs.com/package/@chatie/graphql)
 [![Build Status](https://travis-ci.org/Chatie/graphql.svg?branch=master)](https://travis-ci.org/Chatie/graphql)
 [![Greenkeeper badge](https://badges.greenkeeper.io/Chatie/graphql.svg)](https://greenkeeper.io/)
 
