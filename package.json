@@ -81,8 +81,10 @@
     "dist/*",
     "scripts/*",
     "src/*",
+    "types/*",
     "LICENSE",
     "README.md",
+    "graphcool.yml",
     "package.json"
   ],
   "bin": {

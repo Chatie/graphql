@@ -23,5 +23,8 @@ rm -fv downloaded-schema.json generated-schema.ts
 echo done.
 
 echo "Removing local/dev setting in .graphcoolrc..."
+touch .graphcoolrc
 sed -i'.bak' '/dev: /d' .graphcoolrc
+sed -i'.bak' '/default: dev/d' .graphcoolrc
+
 echo done.
