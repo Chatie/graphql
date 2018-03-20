@@ -4,6 +4,7 @@ import {
 }                             from 'apollo-cache-inmemory'
 import {
   ApolloClient,
+  MutationUpdaterFn,
   ObservableQuery,
 }                             from 'apollo-client'
 import { BatchHttpLink }      from 'apollo-link-batch-http'
@@ -108,6 +109,7 @@ export async function getApolloClient(
 
 export {
   ApolloClient,
-  ObservableQuery,
+  MutationUpdaterFn,
   NormalizedCacheObject,
+  ObservableQuery,
 }

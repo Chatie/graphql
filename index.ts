@@ -3,6 +3,7 @@ export {
   NormalizedCacheObject,
   ObservableQuery,
   getApolloClient,
+  MutationUpdaterFn,
 }                         from './src/apollo'
 export {
   ENDPOINTS,
