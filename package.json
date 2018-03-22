@@ -10,10 +10,11 @@
     "gc:deploy:dry": "graphcool deploy --dry-run",
     "gc:local:deploy": "graphcool deploy -c local -n chatie -t dev",
     "gc:local:info": "graphcool info -t dev",
-    "gc:local:start": "./scripts/local-start.sh",
+    "gc:local:start": "./bin/local-start.sh",
     "gc:local:pull": "graphcool local pull",
     "gc:local:reset": "echo 'not work' || echo y | graphcool reset -t dev",
-    "gc:local:stop": "./scripts/local-stop.sh",
+    "gc:local:restart": "npm run gc:local:stop && npm run gc::local:start",
+    "gc:local:stop": "./bin/local-stop.sh",
     "gc:local:up": "graphcool local up",
     "gc:login": "graphcool login",
     "dist": "npm run clean && tsc",
@@ -88,7 +89,8 @@
     "package.json"
   ],
   "bin": {
-    "chatie-graphql-local-start": "scripts/local-start.sh",
-    "chatie-graphql-local-stop": "scripts/local-stop.sh"
+    "chatie-graphql-local-restart": "bin/local-restart.sh",
+    "chatie-graphql-local-start": "bin/local-start.sh",
+    "chatie-graphql-local-stop": "bin/local-stop.sh"
   }
 }

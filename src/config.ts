@@ -6,7 +6,9 @@ log.level(process.env['BROLOG_LEVEL'] as any)
 import { Endpoints } from 'graphcool-lib/dist/src/types'
 
 // https://github.com/Microsoft/TypeScript/issues/14151#issuecomment-280812617
-(<any>Symbol).asyncIterator = Symbol.asyncIterator || Symbol.for('Symbol.asyncIterator')
+if (!(<any>Symbol).asyncIterator) {
+  ; (<any>Symbol).asyncIterator = Symbol.for('Symbol.asyncIterator')
+}
 
 // export interface Endpoints {
 //   simple:         string,

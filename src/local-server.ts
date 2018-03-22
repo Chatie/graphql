@@ -1,6 +1,6 @@
 import { spawn }  from 'child_process'
 
-import Graphcool    from 'graphcool-lib'
+import Graphcool  from 'graphcool-lib'
 
 import {
   Endpoints,
@@ -43,9 +43,9 @@ export class LocalServer {
   }
 
   public async createHostie(
-    ownerId:  string,
-    name:     string,
-    key:      string,
+      ownerId:  string,
+      name:     string,
+      key:      string,
   ): Promise <{[key: string]: any}> {
     const lib = await this.graphcool()
     const api = lib.api('simple/v1')
@@ -279,8 +279,8 @@ export class LocalServer {
   }
 
   public async generateUserToken(
-    userId:               string,
-    expirationInSeconds?: number,
+      userId:               string,
+      expirationInSeconds?: number,
   ): Promise<string> {
     log.verbose('LocalServer', 'generateUserToken(userId=%s, expirationInSeconds=%s)',
                                 userId,
@@ -299,9 +299,9 @@ export class LocalServer {
   }
 
   public async createUser(
-    email:    string,
-    nickname: string,
-    name?:    string,
+      email:    string,
+      nickname: string,
+      name?:    string,
   ): Promise<string> {
     log.verbose('LocalServer', 'createUser(email=%s, nickname=%s, name=%s)',
                                 email,
