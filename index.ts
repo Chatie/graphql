@@ -12,4 +12,7 @@ export {
   Endpoints,
   log,
 }                         from './src/config'
-export { LocalServer }    from './src/local-server'
+export {
+  LocalServer,
+  ServerFixtures,
+}                         from './src/local-server'

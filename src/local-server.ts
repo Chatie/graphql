@@ -12,6 +12,21 @@ import {
   getApolloClient,
 }                         from './apollo'
 
+export interface ServerFixtures {
+  ENDPOINTS: Endpoints,
+  ROOT: {
+    token: string,
+  },
+  USER: {
+    email:    string,
+    id:       string,
+    name:     string,
+    nickname: string,
+    token:    string,
+  },
+  apollo: ApolloClient<NormalizedCacheObject>,
+}
+
 export class LocalServer {
   private graphcoolInfo:      string
   private graphcoolRootToken: string
@@ -331,7 +346,7 @@ export class LocalServer {
     return result.createUser.id
   }
 
-  public async* fixtures() {
+  public async* fixtures(): AsyncIterableIterator<ServerFixtures> {
     const randomId = Math.random()
                           .toString()
                           .substr(2, 7)
@@ -362,12 +377,13 @@ export class LocalServer {
     const ROOT = {
       token: await this.rootToken(),
     }
-    yield {
+    const serverFixtures: ServerFixtures = {
       ENDPOINTS,
       ROOT,
       USER,
       apollo,
     }
+    yield serverFixtures
 
     await this.deleteAll(true)
 
