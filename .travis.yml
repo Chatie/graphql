@@ -25,16 +25,14 @@ jobs:
         - node --version
         - npm --version
         - graphcool --version
-        - npm run gc:local:stop
-        - npm run gc:local:start
+        - npm run gc:local:restart
         - npm run generate-schema
         - npm test
 
     - stage: pack
       script:
         - echo "NPM Pack Testing..."
-        - npm run gc:local:stop
-        - npm run gc:local:start
+        - npm run gc:local:restart
         - npm run generate-schema
         - npm run test:pack
         - echo 'NPM Pack Testing is PASSED.'
@@ -43,8 +41,7 @@ jobs:
       script:
         - echo "Deploying to NPM ..."
         - npm version
-        - npm run gc:local:stop
-        - npm run gc:local:start
+        - npm run gc:local:restart
         - npm run generate-schema
         - npm run dist
 
