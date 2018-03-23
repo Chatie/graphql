@@ -39,13 +39,11 @@
     "jsonwebtoken": "^8.1.0",
     "jwks-rsa": "^1.2.1",
     "node-fetch": "^2.1.1",
-    "read-pkg-up": "^3.0.0",
     "subscriptions-transport-ws": "^0.9.6"
   },
   "devDependencies": {
     "@types/blue-tape": "^0.1.31",
     "@types/node": "^9.4.6",
-    "@types/read-pkg-up": "^3.0.1",
     "@types/ws": "^4.0.1",
     "apollo-codegen": "^0.19.0",
     "babel-eslint": "^8.2.2",

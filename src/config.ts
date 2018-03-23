@@ -1,7 +1,7 @@
-import * as readPkgUp from 'read-pkg-up'
-
 import { log }   from 'brolog'
-log.level(process.env['BROLOG_LEVEL'] as any)
+if (process) {
+  log.level(process.env['BROLOG_LEVEL'] as any)
+}
 
 import { Endpoints } from 'graphcool-lib/dist/src/types'
 
@@ -37,8 +37,25 @@ export const STAGING_ENDPOINTS: Endpoints = {
   subscriptions:  'wss://subscriptions.ap-northeast-1.graph.cool/v1/chatie-staging',
 }
 
-const pkg = readPkgUp.sync({ cwd: __dirname }).pkg
-export const VERSION = pkg.version
+let pkg: {
+  version: string,
+} | undefined
+
+try {
+  pkg = require('../package.json')
+} catch (e) {
+  //
+}
+
+if (!pkg) {
+  try {
+    pkg = require('../../package.json')
+  } catch (e) {
+    //
+  }
+}
+
+export const VERSION = pkg ? pkg.version : 'unknown'
 
 export {
   Endpoints,
