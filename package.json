@@ -29,6 +29,7 @@
   "dependencies": {
     "apollo-cache-inmemory": "^1.1.11",
     "apollo-client": "^2.2.6",
+    "apollo-link": "^1.2.1",
     "apollo-link-batch-http": "^1.2.1",
     "apollo-link-ws": "^1.0.7",
     "brolog": "^1.2.8",
