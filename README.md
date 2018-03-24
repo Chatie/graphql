@@ -4,6 +4,8 @@
 [![Build Status](https://travis-ci.org/Chatie/graphql.svg?branch=master)](https://travis-ci.org/Chatie/graphql)
 [![Greenkeeper badge](https://badges.greenkeeper.io/Chatie/graphql.svg)](https://greenkeeper.io/)
 
+![GraphQL](https://chatie.io/graphql/images/graphql.png)
+
 Chatie GraphQL Schema & Settings & Development Fixtures
 
 > `@chatie/graphql` is a system module for https://www.chatie.io
