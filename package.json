@@ -91,5 +91,8 @@
     "chatie-graphql-local-restart": "bin/local-restart.sh",
     "chatie-graphql-local-start": "bin/local-start.sh",
     "chatie-graphql-local-stop": "bin/local-stop.sh"
+  },
+  "browser": {
+    "child_process": false
   }
 }
