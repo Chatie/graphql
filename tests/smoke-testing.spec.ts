@@ -110,10 +110,10 @@ test('subscription', async t => {
       })
       .subscribe(
         ({data}) => {
+          resolve(data)
           log.silly('SmokeTesting', 'subscription: %s', JSON.stringify(data))
           hostieSubscription.unsubscribe()
           log.silly('SmokeTesting', 'subscription unsubscribed')
-          resolve(data)
         },
         reject,
       )
