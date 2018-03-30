@@ -16,7 +16,7 @@ import {
 import { getMainDefinition }  from 'apollo-utilities'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
-import fetch          from 'node-fetch'
+import fetch          from 'cross-fetch'
 import * as WebSocket from 'ws'
 import {
   ENDPOINTS,

@@ -25,25 +25,25 @@ jobs:
         - node --version
         - npm --version
         - graphcool --version
-        - npm run gc:local:restart
-        - npm run generate-schema
-        - npm test
+        - travis_retry npm run gc:local:restart
+        - travis_retry npm run generate-schema
+        - travis_retry npm test
 
     - stage: pack
       script:
         - echo "NPM Pack Testing..."
-        - npm run gc:local:restart
-        - npm run generate-schema
-        - npm run test:pack
+        - travis_retry npm run gc:local:restart
+        - travis_retry npm run generate-schema
+        - travis_retry npm run test:pack
         - echo 'NPM Pack Testing is PASSED.'
 
     - stage: deploy
       script:
         - echo "Deploying to NPM ..."
         - npm version
-        - npm run gc:local:restart
-        - npm run generate-schema
-        - npm run dist
+        - travis_retry npm run gc:local:restart
+        - travis_retry npm run generate-schema
+        - travis_retry npm run dist
 
       deploy:
         provider: npm

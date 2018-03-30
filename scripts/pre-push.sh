@@ -15,6 +15,9 @@ set -e
   exit 0
 }
 
+sed -i'.bak' '/dev: /d' .graphcoolrc
+sed -i'.bak' '/default: dev/d' .graphcoolrc
+
 npm run lint
 
 [ -z "$CYGWIN" ] && {
