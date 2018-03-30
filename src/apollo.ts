@@ -24,7 +24,7 @@ import {
   log,
 }                     from './config'
 
-export async function getApolloClient(
+export async function makeApolloClient(
   token:      string,
   endpoints:  Endpoints = ENDPOINTS,
 ) {

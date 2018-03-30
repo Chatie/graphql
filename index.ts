@@ -2,7 +2,7 @@ export {
   ApolloClient,
   NormalizedCacheObject,
   ObservableQuery,
-  getApolloClient,
+  makeApolloClient,
   MutationUpdaterFn,
 }                         from './src/apollo'
 export {
