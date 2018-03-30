@@ -7,17 +7,17 @@ import {
   MutationUpdaterFn,
   ObservableQuery,
 }                             from 'apollo-client'
-import { BatchHttpLink }      from 'apollo-link-batch-http'
-import { WebSocketLink }      from 'apollo-link-ws'
 import {
   ApolloLink,
   Operation,
 }                             from 'apollo-link'
+import { BatchHttpLink }      from 'apollo-link-batch-http'
+import { WebSocketLink }      from 'apollo-link-ws'
 import { getMainDefinition }  from 'apollo-utilities'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 import fetch          from 'cross-fetch'
-import * as WebSocket from 'ws'
+import * as WebSocket from 'isomorphic-ws'
 import {
   ENDPOINTS,
   Endpoints,
