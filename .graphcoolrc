@@ -2,4 +2,3 @@ targets:
   prod: shared-ap-northeast-1/cjdbw710k0zpr0129sv35o79e
   default: staging
   staging: shared-ap-northeast-1/cjepthzeu185i010041h1k8n3
-  dev: local/cjfsmg1in00040187m9bhd8w1
