@@ -9,7 +9,7 @@ import {
 import {
   ApolloClient,
   NormalizedCacheObject,
-  getApolloClient,
+  makeApolloClient,
 }                         from './apollo'
 
 export interface ServerFixtures {
@@ -369,7 +369,7 @@ export class LocalServer {
 
     USER.token = await this.generateUserToken(USER.id)
     const ENDPOINTS = await this.endpoints()
-    const apollo: ApolloClient<NormalizedCacheObject> = await getApolloClient(
+    const apollo: ApolloClient<NormalizedCacheObject> = await makeApolloClient(
       USER.token,
       ENDPOINTS,
     )

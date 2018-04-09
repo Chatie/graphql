@@ -1,7 +1,4 @@
 import { log }   from 'brolog'
-if (process) {
-  log.level(process.env['BROLOG_LEVEL'] as any)
-}
 
 import { Endpoints } from 'graphcool-lib/dist/src/types'
 
