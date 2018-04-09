@@ -60,8 +60,11 @@ function auth0RuleGraphcool(user, context, callback) {
   function getAuthToken(graphcoolUserId)
   {
     generateAuthToken(graphcoolUserId, function(token) {
-      // context.idToken['https://graph.cool/token'] = token
-      context.idToken['graph_cool_token'] = token
+      context.idToken['https://graph.cool/token'] = token
+      /**
+       * This did not work???
+       * context.idToken['graph_cool_token'] = token
+       */
       callback(null, user, context)
     })
   }
