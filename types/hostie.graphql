@@ -14,7 +14,7 @@ type Hostie @model {
   updatedAt:  DateTime!     # read-only (managed by Graphcool)
 
   note:     String
-  key:      String! @isUnique
+  token:    String! @isUnique
   name:     String
   version:  String
 

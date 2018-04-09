@@ -60,7 +60,7 @@ export class LocalServer {
   public async createHostie(
       ownerId:  string,
       name:     string,
-      key:      string,
+      token:      string,
   ): Promise <{[key: string]: any}> {
     const lib = await this.graphcool()
     const api = lib.api('simple/v1')
@@ -70,7 +70,7 @@ export class LocalServer {
         createHostie(
           ownerId:  "${ownerId}",
           name:     "${name}",
-          key:      "${key}",
+          token:    "${token}",
         ) {
           id
         }

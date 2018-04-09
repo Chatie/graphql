@@ -4,9 +4,9 @@ type Botie @model {
   createdAt:  DateTime!           # read-only (managed by Graphcool)
   updatedAt:  DateTime!           # read-only (managed by Graphcool)
 
-  key:  String! @isUnique
-  name: String
-  note: String
+  token:  String! @isUnique
+  name:   String
+  note:   String
 
   status: Status! @defaultValue(value: OFF)
 
