@@ -16,7 +16,7 @@ export const GQL_ALL_HOSTIES = gql`
     allHosties {
       id,
       name,
-      key,
+      token,
       owner {
         name,
       }
@@ -30,7 +30,7 @@ export const GQL_CREATE_HOSTIE = gql`
     $ownerId: ID!,
   ) {
     createHostie(
-      key:      $name,
+      token:      $name,
       name:     $name,
       ownerId:  $ownerId,
     ) {
@@ -70,14 +70,14 @@ export const GQL_SUBSCRIBE_HOSTIE = gql`
       node {
         id,
         name,
-        key,
+        token,
         owner {
           name,
         },
       },
       previousValues {
         id,
-        key,
+        token,
       },
     }
   }

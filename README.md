@@ -48,6 +48,29 @@ npm test
 1. See: `/graphcool.yml`
 1. See: `/types/*.graphql`
 
+## Platform
+
+### Node.js
+
+https://nodejs.org/api/os.html#os_os_platform
+
+* aix
+* **darwin**
+* freebsd
+* **linux**
+* openbsd
+* sunos
+* **win32**
+
+### Python
+
+https://docs.python.org/dev/library/sys.html#sys.platform
+
+* cygwin
+* **darwin**
+* **linux**
+* **win32**
+
 # API
 
 ## `LocalServer` Class
