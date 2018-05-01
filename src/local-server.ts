@@ -18,11 +18,11 @@ export interface ServerFixtures {
     token: string,
   },
   USER: {
-    email:    string,
-    id:       string,
-    name:     string,
-    nickname: string,
-    token:    string,
+    email:  string,
+    id:     string,
+    name:   string,
+    login:  string,
+    token:  string,
   },
   apollo: ApolloClient<NormalizedCacheObject>,
 }
@@ -314,13 +314,13 @@ export class LocalServer {
   }
 
   public async createUser(
-      email:    string,
-      nickname: string,
-      name?:    string,
+      email:  string,
+      login:  string,
+      name?:  string,
   ): Promise<string> {
-    log.verbose('LocalServer', 'createUser(email=%s, nickname=%s, name=%s)',
+    log.verbose('LocalServer', 'createUser(email=%s, login=%s, name=%s)',
                                 email,
-                                nickname,
+                                login,
                                 name,
                 )
 
@@ -330,9 +330,9 @@ export class LocalServer {
     const query = `
       mutation CreateUser {
         createUser(
-          email: "${email}",
-          nickname: "${nickname}",
-          name: "${name}",
+          email:  "${email}",
+          login:  "${login}",
+          name:   "${name}",
         ) {
           id
         }
@@ -352,18 +352,18 @@ export class LocalServer {
                           .substr(2, 7)
 
     const USER = {
-      email:    `email-${randomId}@email.com`,
-      nickname: `nickname-${randomId}`,
-      name:     `name-${randomId}`,
-      id:       '',
-      token:    '',
+      email:  `email-${randomId}@email.com`,
+      login:  `login-${randomId}`,
+      name:   `name-${randomId}`,
+      id:     '',
+      token:  '',
     }
 
     await this.deleteAll(true)
 
     USER.id = await this.createUser(
       USER.email,
-      USER.nickname,
+      USER.login,
       USER.name,
     )
 

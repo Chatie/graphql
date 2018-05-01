@@ -5,9 +5,11 @@
  * README: https://github.com/kbrandwijk/functions/tree/a55a744adf2b3d10094d0d4fe0d4b3469fd1b370/authentication/auth0-rule-authentication
  *
  * NOTICE: The JavaScript engine of Auth0 Rules does not support trailing comma `,` before `}`
+ *
+ * Rule Docs: https://auth0.com/docs/rules/
  */
 
-function auth0RuleGraphcool(user, context, callback) {
+function auth0RuleGraphcool(user, context, ruleCallback) {
   // Since every Rule runs during Auth0 authentication / authorization, there's no
   // implicit way to skip a Rule. But, each login transaction reports the Client ID
   // making the request. As such, we can explicitly bail out of any Rule that is
@@ -19,7 +21,7 @@ function auth0RuleGraphcool(user, context, callback) {
     && context.clientID !== clientIdGraphcoolTest
   ) {
    console.log('client not match', context.clientID)
-   return( callback( null, user, context ) )
+   return ruleCallback(null, user, context)
   }
   console.log(context)
 
@@ -30,9 +32,9 @@ function auth0RuleGraphcool(user, context, callback) {
 
   var request = require('request')
 
-  const email     = user.email
-  const name      = user.name
-  const nickname  = user.nickname
+  const email = user.email
+  const name  = user.name
+  const login = user.username
 
   var getUserQuery = `query { User(email: "${email}") { id } }`
 
@@ -45,14 +47,14 @@ function auth0RuleGraphcool(user, context, callback) {
     function(err, resp, body) {
       var result = JSON.parse(body)
 
-      if (result.data.User == null)
+      if (result.data.User)
       {
-        // Create user
-        createUser(email, nickname, name, getAuthToken)
+        getAuthToken(result.data.User.id)
       }
       else
       {
-        getAuthToken(result.data.User.id)
+        // Create user
+        createUser(email, login, name, getAuthToken)
       }
     }
   )
@@ -65,18 +67,18 @@ function auth0RuleGraphcool(user, context, callback) {
        * This did not work???
        * context.idToken['graph_cool_token'] = token
        */
-      callback(null, user, context)
+      ruleCallback(null, user, context)
     })
   }
 
-  function createUser(email, nickname, name, cb)
+  function createUser(email, login, name, cb)
   {
     var createUserMutation = `
       mutation {
         createUser(
-          email:    "${email}",
-          nickname: "${nickname}",
-          name:     "${name}",
+          email:  "${email}",
+          login:  "${login}",
+          name:   "${name}",
         ) {
           id
         }
@@ -90,6 +92,9 @@ function auth0RuleGraphcool(user, context, callback) {
         headers: { 'Content-Type': 'application/json'},
       },
       function(err, resp, body) {
+        if (err) {
+          console.error(err)
+        }
         cb(JSON.parse(body).data.createUser.id)
       }
     )

@@ -62,14 +62,14 @@ test('createUser', async t => {
   const rand = Math.random().toString().substr(2, 7)
   const name = `zixia-${rand}`
   const EXPECTED_EMAIL    = `${name}@zixia.net`
-  const EXPECTED_NICKNAME = name
+  const EXPECTED_LOGIN = name
   const EXPECTED_NAME     = name
 
   const localServer = new LocalServer()
 
   const id = await localServer.createUser(
     EXPECTED_EMAIL,
-    EXPECTED_NICKNAME,
+    EXPECTED_LOGIN,
     EXPECTED_NAME,
   )
 
@@ -79,14 +79,14 @@ test('createUser', async t => {
 test('generateUserToken', async t => {
   const name = 'zixia-' + Math.random().toString().substr(2, 7)
   const EXPECTED_EMAIL    = `${name}@zixia.net`
-  const EXPECTED_NICKNAME = name
+  const EXPECTED_LOGIN = name
   const EXPECTED_NAME     = name
 
   const localServer = new LocalServer()
 
   const userId = await localServer.createUser(
     EXPECTED_EMAIL,
-    EXPECTED_NICKNAME,
+    EXPECTED_LOGIN,
     EXPECTED_NAME,
   )
 

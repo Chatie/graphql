@@ -8,6 +8,7 @@
     "clean": "shx rm -fr dist/*",
     "generate-schema": "ts-node bin/generate-schema",
     "gc:deploy:prod": "graphcool deploy -t prod",
+    "gc:deploy:prod:force": "graphcool deploy -t prod --force",
     "gc:deploy:dry": "graphcool deploy --dry-run",
     "gc:local:deploy": "graphcool deploy -c local -n chatie -t dev",
     "gc:local:info": "graphcool info -t dev",
