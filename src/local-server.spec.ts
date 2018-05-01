@@ -78,9 +78,9 @@ test('createUser', async t => {
 
 test('generateUserToken', async t => {
   const name = 'zixia-' + Math.random().toString().substr(2, 7)
-  const EXPECTED_EMAIL    = `${name}@zixia.net`
+  const EXPECTED_EMAIL = `${name}@zixia.net`
   const EXPECTED_LOGIN = name
-  const EXPECTED_NAME     = name
+  const EXPECTED_NAME  = name
 
   const localServer = new LocalServer()
 
