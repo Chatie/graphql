@@ -17,6 +17,8 @@ stages:
   - name: deploy
     if: branch =~ ^(master|v\d+\.\d+)
 
+install: travis_retry npm install
+
 jobs:
   include:
     - stage: test
@@ -39,11 +41,12 @@ jobs:
 
     - stage: deploy
       script:
-        - echo "Deploying to NPM ..."
+        - echo "Packing NPM ..."
         - npm version
         - travis_retry npm run gc:local:restart
         - travis_retry npm run generate-schema
         - travis_retry npm run dist
+        - echo "Deploying to NPM ..."
 
       deploy:
         provider: npm
