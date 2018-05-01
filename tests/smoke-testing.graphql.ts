@@ -6,7 +6,7 @@ export const GQL_CURRENT_USER = gql`
       email,
       id,
       name,
-      nickname,
+      login,
     }
   }
 `
@@ -86,13 +86,13 @@ export const GQL_SUBSCRIBE_HOSTIE = gql`
 export const GQL_CREATE_USER = gql`
   mutation CreateUser(
     $email:     String!,
-    $nickname:  String!,
+    $login:  String!,
     $name:      String,
   ) {
     createUser(
-      email:    $email,
-      nickname: $nickname,
-      name:     $name,
+      email:  $email,
+      login:  $login,
+      name:   $name,
     ) {
       id
     }

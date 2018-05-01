@@ -4,10 +4,10 @@ type User @model {
   createdAt:  DateTime!           # read-only (managed by Graphcool)
   updatedAt:  DateTime!           # read-only (managed by Graphcool)
 
-  email:    String! @isUnique
-  nickname: String! @isUnique
+  email: String! @isUnique
+  login: String! @isUnique  # Login Name. like zixia in github.com/zixia
 
-  name: String
+  name: String  # Display Name
   note: String
 
   hostieList: [Hostie!]!  @relation(name: "UserHosties")
