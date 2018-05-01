@@ -1,6 +1,6 @@
 {
   "name": "@chatie/graphql",
-  "version": "0.4.9",
+  "version": "0.5.1",
   "description": "Chatie GraphQL Service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -55,7 +55,7 @@
     "git-scripts": "^0.2.1",
     "graphql-tag": "^2.8.0",
     "shx": "^0.2.2",
-    "ts-node": "^5.0.1",
+    "ts-node": "^6.0.0",
     "tslint": "^5.9.1",
     "typescript": "^2.7.2"
   },
@@ -96,6 +96,10 @@
     "chatie-graphql-local-restart": "bin/local-restart.sh",
     "chatie-graphql-local-start": "bin/local-start.sh",
     "chatie-graphql-local-stop": "bin/local-stop.sh"
+  },
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest"
   },
   "browser": {
     "child_process": false

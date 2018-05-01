@@ -72,28 +72,33 @@ test('mutation/create', async t => {
     const name    = cuid()
     const ownerId = user.id
 
-    const mutationResult: CreateHostieMutation = await apollo.mutate<CreateHostieMutation>({
+    const mutationResult = await apollo.mutate<CreateHostieMutation>({
       mutation: GQL_CREATE_HOSTIE,
       variables: {
         name,
         ownerId,
       },
-      update: (proxy, { data: { createHostie } }) => {
+      update: (proxy, { data }) => {
+        if (!data || !data.createHostie) {
+          return
+        }
+        const createHostie = data.createHostie
+
         // Read the data from our cache for this query.
         try {
-          const data = proxy.readQuery<AllHostiesQuery>({ query: GQL_ALL_HOSTIES })
-          if (data) {
+          const cacheData = proxy.readQuery<AllHostiesQuery>({ query: GQL_ALL_HOSTIES })
+          if (cacheData) {
             // Add our comment from the mutation to the end.
-            data.allHosties.push(createHostie)
+            cacheData.allHosties.push(createHostie)
             // Write our data back to the cache.
-            proxy.writeQuery({ query: GQL_ALL_HOSTIES, data })
+            proxy.writeQuery({ query: GQL_ALL_HOSTIES, data: cacheData })
           }
         } catch (e) {
           /// no query exist yet
         }
       },
     }).then(x => x.data)
-    const hostie = mutationResult.createHostie
+    const hostie = mutationResult && mutationResult.createHostie
     // console.log(hostie && hostie.name)
     t.ok(hostie, 'should return the created hostie')
     t.equal(hostie && hostie.name, name, 'should create a hostie for the specified name')
@@ -249,13 +254,14 @@ test('watchQuery/subscribeToMore', async t => {
 
     subscriptionFuture = new Promise(r => subscriptionNotifier.push(r))
     const EXPECTED_NAME2 = 'a test hostie name 2'
-    const createHostieResult: CreateHostieMutation = await apollo.mutate({
+    const createHostieResult = await apollo.mutate({
       mutation: GQL_CREATE_HOSTIE,
       variables: {
         name: EXPECTED_NAME2,
         ownerId,
       },
-    }).then(x => x.data)
+    }).then(x => x.data) as CreateHostieMutation
+
     await subscriptionFuture
 
     const createdHostie = createHostieResult.createHostie

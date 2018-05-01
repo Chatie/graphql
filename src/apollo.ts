@@ -14,6 +14,9 @@ import {
 import { BatchHttpLink }      from 'apollo-link-batch-http'
 import { WebSocketLink }      from 'apollo-link-ws'
 import { getMainDefinition }  from 'apollo-utilities'
+// import {
+//   OperationDefinitionNode,
+// }                             from 'graphql'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
 import fetch          from 'cross-fetch'
@@ -85,8 +88,12 @@ export async function makeApolloClient(
   })
 
   const hasSubscriptionOperation = (op: Operation) => {
-    const { kind, operation } = getMainDefinition(op.query)
-    return kind === 'OperationDefinition' && operation === 'subscription'
+    const result = getMainDefinition(op.query)
+
+    if (result.kind === 'OperationDefinition') {
+      return result.operation === 'subscription'
+    }
+    return false
   }
 
   const link = ApolloLink.split(
