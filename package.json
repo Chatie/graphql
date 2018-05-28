@@ -63,12 +63,6 @@
   "peerDependencies": {
     "brolog": ">=1"
   },
-  "git": {
-    "scripts": {
-      "pre-commit": "./scripts/clean.sh",
-      "pre-push": "./scripts/pre-push.sh"
-    }
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chatie/graphql.git"
@@ -101,6 +95,12 @@
   "publishConfig": {
     "access": "public",
     "tag": "latest"
+  },
+  "git": {
+    "scripts": {
+      "pre-commit": "./scripts/clean.sh",
+      "pre-push": "./scripts/pre-push.sh"
+    }
   },
   "browser": {
     "child_process": false
