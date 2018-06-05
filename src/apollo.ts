@@ -4,6 +4,7 @@ import {
 }                             from 'apollo-cache-inmemory'
 import {
   ApolloClient,
+  ApolloClientOptions,
   MutationUpdaterFn,
   ObservableQuery,
 }                             from 'apollo-client'
@@ -102,7 +103,18 @@ export async function makeApolloClient(
     httpLink,
   )
   const cache   = new InMemoryCache()
-  const apollo  = new ApolloClient({
+
+  class MyApolloClient<TCacheShape> extends ApolloClient<TCacheShape> {
+    constructor(options: ApolloClientOptions<TCacheShape>) {
+      super(options)
+    }
+
+    public wsClose() {
+      wsClient.close()
+    }
+  }
+
+  const apollo  = new MyApolloClient({
     link,
     cache,
   })
@@ -110,7 +122,7 @@ export async function makeApolloClient(
   await connectedFuture
   log.silly('Apollo', 'getApolloClient() connected')
 
-  apollo['wsClose'] = () => wsClient.close()
+  // apollo['wsClose'] = () => wsClient.close()
   return apollo
 }
 

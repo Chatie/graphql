@@ -6,22 +6,26 @@
     , "declaration": true
     , "sourceMap": true
     , "noLib": false
+    , "skipLibCheck": true
 
-    , "noEmitOnError": true
-    , "noUnusedLocals": true
-    , "noImplicitReturns": true
-    , "noFallthroughCasesInSwitch": true
-    , "strictNullChecks": true
-
-    , "noImplicitAny": false
-    , "noUnusedParameters": false
-    , "noImplicitThis": false
     , "traceResolution": false
     , "lib": [
         "es2016"
       , "esnext"
       , "dom"
     ]
+    , "strict": true
+    , "alwaysStrict": true
+    , "strictFunctionTypes": true
+    , "strictPropertyInitialization": true
+    , "noEmitOnError": true
+    , "noUnusedLocals": true
+    , "noImplicitReturns": true
+    , "noFallthroughCasesInSwitch": true
+    , "strictNullChecks": true
+    , "noImplicitAny": true
+    , "noUnusedParameters": true
+    , "noImplicitThis": true
   }
   , "exclude": [
       "node_modules/"

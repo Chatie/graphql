@@ -28,9 +28,9 @@ export interface ServerFixtures {
 }
 
 export class LocalServer {
-  private graphcoolInfo:      string
-  private graphcoolRootToken: string
-  private graphcoolLib:       Graphcool
+  private graphcoolInfo?:      string
+  private graphcoolRootToken?: string
+  private graphcoolLib?:       Graphcool
 
   constructor() {
     log.verbose('LocalServer', 'constructor() __dirname=%s', __dirname)
@@ -218,12 +218,12 @@ export class LocalServer {
       system:         'http://localhost:60000/system',  // FIXME: get from graphcool
     }
 
-    Object.keys(REGEX).forEach(k => {
-      const match = REGEX[k].exec(info)
+    for (const k in REGEX) {
+      const match = REGEX[k as keyof typeof REGEX].exec(info)
       if (match && match[1]) {
-        endpoints[k] = match[1]
+        endpoints[k as keyof typeof REGEX] = match[1]
       }
-    })
+    }
 
     return endpoints
   }
@@ -369,7 +369,7 @@ export class LocalServer {
 
     USER.token = await this.generateUserToken(USER.id)
     const ENDPOINTS = await this.endpoints()
-    const apollo: ApolloClient<NormalizedCacheObject> = await makeApolloClient(
+    const apollo = await makeApolloClient(
       USER.token,
       ENDPOINTS,
     )

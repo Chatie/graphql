@@ -16,19 +16,18 @@ stages:
   - test
   - pack
   - name: deploy
-    if: branch =~ ^(master|v\d+\.\d+)
-        AND (type NOT IN (cron, pull_request))
+    if: (type = push) AND branch =~ ^(master|v\d+\.\d+)$
 
-install: travis_retry npm install
+install: npm install
 
 script:
   - echo $TRAVIS_OS_NAME
   - node --version
   - npm --version
   - graphcool --version
-  - travis_retry npm run gc:local:restart
-  - travis_retry npm run generate-schema
-  - travis_retry npm test
+  - npm run gc:local:restart
+  - npm run generate-schema
+  - npm test
 
 jobs:
   include:
@@ -36,19 +35,19 @@ jobs:
     - stage: pack
       script:
         - echo "NPM Pack Testing..."
-        - travis_retry npm run gc:local:restart
-        - travis_retry npm run generate-schema
-        - travis_retry npm run test:pack
+        - npm run gc:local:restart
+        - npm run generate-schema
+        - npm run test:pack
         - echo 'NPM Pack Testing is PASSED.'
 
     - stage: deploy
       script:
         - echo "Packing NPM ..."
         - npm version
-        - travis_retry npm run gc:local:restart
-        - travis_retry npm run generate-schema
+        - npm run gc:local:restart
+        - npm run generate-schema
         - if ./scripts/development-release.ts; then ./scripts/package-publish-config-tag-next.ts; fi
-        - travis_retry npm run dist
+        - npm run dist
         - echo "Deploying to NPM ..."
 
       deploy:

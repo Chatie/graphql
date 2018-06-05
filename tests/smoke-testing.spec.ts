@@ -158,7 +158,7 @@ test('watchQuery/subscribeToMore', async t => {
 
     hostieQuery.subscribeToMore({
       document: GQL_SUBSCRIBE_HOSTIE,
-      updateQuery: (prev, { subscriptionData }) => {
+      updateQuery: (prev: { [idx: string]: any }, { subscriptionData }) => {
         const data: SubscribeHostieSubscription = subscriptionData.data
         if (!data || !data.Hostie) {
           return prev
