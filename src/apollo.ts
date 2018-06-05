@@ -28,6 +28,22 @@ import {
   log,
 }                     from './config'
 
+export interface MyApolloClientOptions<TCacheShape> extends ApolloClientOptions<TCacheShape> {
+  wsClient: SubscriptionClient
+}
+
+export class MyApolloClient<TCacheShape> extends ApolloClient<TCacheShape> {
+  private wsClient: SubscriptionClient
+  constructor(options: MyApolloClientOptions<TCacheShape>) {
+    super(options)
+    this.wsClient = options.wsClient
+  }
+
+  public wsClose() {
+    this.wsClient.close()
+  }
+}
+
 export async function makeApolloClient(
   token:      string,
   endpoints:  Endpoints = ENDPOINTS,
@@ -104,25 +120,15 @@ export async function makeApolloClient(
   )
   const cache   = new InMemoryCache()
 
-  class MyApolloClient<TCacheShape> extends ApolloClient<TCacheShape> {
-    constructor(options: ApolloClientOptions<TCacheShape>) {
-      super(options)
-    }
-
-    public wsClose() {
-      wsClient.close()
-    }
-  }
-
   const apollo  = new MyApolloClient({
     link,
     cache,
+    wsClient,
   })
 
   await connectedFuture
   log.silly('Apollo', 'getApolloClient() connected')
 
-  // apollo['wsClose'] = () => wsClient.close()
   return apollo
 }
 
