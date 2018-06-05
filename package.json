@@ -53,7 +53,7 @@
     "blue-tape": "^1.0.0",
     "brolog": "^1.6.1",
     "cuid": "^2.1.0",
-    "dotenv": "^5.0.1",
+    "dotenv": "^6.0.0",
     "eslint": "^4.17.0",
     "git-scripts": "^0.2.1",
     "graphql-tag": "^2.8.0",
@@ -64,12 +64,6 @@
   },
   "peerDependencies": {
     "brolog": ">=1"
-  },
-  "git": {
-    "scripts": {
-      "pre-commit": "./scripts/clean.sh",
-      "pre-push": "./scripts/pre-push.sh"
-    }
   },
   "repository": {
     "type": "git",
@@ -103,6 +97,12 @@
   "publishConfig": {
     "access": "public",
     "tag": "latest"
+  },
+  "git": {
+    "scripts": {
+      "pre-commit": "./scripts/clean.sh",
+      "pre-push": "./scripts/pre-push.sh"
+    }
   },
   "browser": {
     "child_process": false
