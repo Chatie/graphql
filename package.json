@@ -54,7 +54,7 @@
     "brolog": "^1.6.1",
     "cuid": "^2.1.0",
     "dotenv": "^6.0.0",
-    "eslint": "^4.17.0",
+    "eslint": "^5.0.0",
     "git-scripts": "^0.2.1",
     "graphql-tag": "^2.8.0",
     "shx": "^0.2.2",
