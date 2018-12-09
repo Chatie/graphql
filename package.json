@@ -33,7 +33,7 @@
     "apollo-link": "^1.2.1",
     "apollo-link-batch-http": "^1.2.1",
     "apollo-link-ws": "^1.0.7",
-    "cross-fetch": "^2.1.0",
+    "cross-fetch": "^3.0.0",
     "graphcool": "^0.11.5",
     "graphcool-lib": "^0.1.4",
     "isomorphic-ws": "^4.0.0",
